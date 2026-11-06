@@ -2,13 +2,14 @@
 from __future__ import annotations
 
 import html
+import hashlib
 import json
 import os
 import re
-import textwrap
 from pathlib import Path
+import html_shapes
 
-from presentation_charts import render as render_chart, svg_text, inside, html_visual
+from presentation_charts import render as render_chart, inside, html_visual
 
 FLOW = ("<!-- AUTO:phase-flow -->", "<!-- /AUTO:phase-flow -->")
 CHARTS = ("<!-- AUTO:charts -->", "<!-- /AUTO:charts -->")
@@ -84,34 +85,15 @@ def model(root, phase, items):
             "language": config.get("language", "English"), "charts": charts,"test_run":test_run}
 
 
-def flow_svg(data):
+def flow_html(data):
     language = data["language"]
-    steps = data["steps"]
-    rows = max(1, (len(steps)+2)//3)
-    height = 100+rows*190
-    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 {height}" role="img" aria-labelledby="phase-flow-title" style="font-family:system-ui,sans-serif">',
-             f'<title id="phase-flow-title">{word("Phase route",language)}: {data["done"]}/{data["total"]}</title>',
-             '<desc>Ordered steps, derived task status. Multiple steps may be active at the same time.</desc>',
-             f'<rect width="1100" height="{height}" rx="12" fill="#f5f8f8"/>',
-             '<defs><marker id="flow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#a4b5b6"/></marker></defs>',
-             svg_text(24, 40, f'{word("Verified tasks",language)}: {data["done"]}/{data["total"]}', 20)]
-    if not steps: parts.append(svg_text(24, 120, word("No tasks defined",language), 18))
-    for i, step in enumerate(steps):
-        col, row = i%3, i//3; x, y = 24+col*366, 75+row*190
-        _, label, color = STATES[step["mark"]]
-        parts.append(f'<rect x="{x}" y="{y}" width="320" height="132" rx="10" fill="#ffffff" stroke="#d7e1e1"/>')
-        parts.append(f'<rect x="{x}" y="{y+12}" width="4" height="108" fill="{color}"/>')
-        parts.append(svg_text(x+18,y+28,f'{i+1:02d} · {word(label,language)}',14,fill=color))
-        title = str(step["label"])
-        lines = textwrap.wrap(title, 29) or [""]
-        if len(lines)>2: lines=lines[:1]+[lines[1][:26]+"…"]
-        for j, line in enumerate(lines): parts.append(svg_text(x+18,y+58+j*22,line,18))
-        parts.append(svg_text(x+18,y+113,f'{step["done"]}/{step["total"]} {word("Verified tasks",language)}',13))
-        if i < len(steps)-1:
-            if col < 2: path = f'M{x+326} {y+66}H{x+358}'
-            else: path = f'M{x+326} {y+66}H1090V{y+160}H12V{y+256}H20'
-            parts.append(f'<path d="{path}" fill="none" stroke="#a4b5b6" stroke-width="2" marker-end="url(#flow-arrow)"/>')
-    return "".join(parts)+"</svg>"
+    items = []
+    for n, step in enumerate(data["steps"], 1):
+        state, label, _ = STATES[step["mark"]]
+        items.append(f'<li class="flow-step {state}"><span class="flow-state">{html.escape(word(label,language))}</span><strong>{n:02d} · {html.escape(step["label"])}</strong><span>{step["done"]}/{step["total"]} {html.escape(word("Verified tasks",language))}</span></li>')
+    if not items:
+        return '<p>'+html.escape(word("No tasks defined",language))+'</p>'
+    return '<ol class="flow-list">'+''.join(items)+'</ol>'
 
 
 def markdown_cell(value):
@@ -123,20 +105,20 @@ def outputs(root, phase, items):
     directory = root / "project/phases" / f"phase-{phase}"
     data = model(root, phase, items)
     language = data["language"]
-    svg = flow_svg(data)
-    assets = {directory / "phase-flow.svg": svg}
-    md_flow = f'## {word("Phase route",language)}\n\n![{word("Phase route",language)}](phase-flow.svg)\n\n'
+    flow = flow_html(data)
+    css = (Path(__file__).resolve().parent.parent / "templates/presentation-visuals.css").read_text(encoding="utf-8")
+    page = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Phase route</title><style>'+css+'</style></head><body><main class="phase-progress">'+flow+'</main></body></html>'
+    assets = {directory / "phase-flow.html": page}
+    md_flow = f'## {word("Phase route",language)}\n\n[{word("Phase route",language)}](phase-flow.html)\n\n'
     md_flow += f'{word("Verified tasks",language)}: **{data["done"]}/{data["total"]}**. Counts describe verified tasks, not effort or elapsed time.\n\n'
     md_flow += '| '+word("Step",language)+' | '+word("Status",language)+' | '+word("Verified tasks",language)+' | Tasks |\n|---|---|---|---|\n'
-    list_items = []
     for n, step in enumerate(data["steps"],1):
         state, label, _ = STATES[step["mark"]]; label = word(label,language)
         md_flow += f'| {n}. {markdown_cell(step["label"])} | {label} | {step["done"]}/{step["total"]} | {markdown_cell(", ".join(step["refs"]))} |\n'
-        list_items.append(f'<li class="flow-step {state}"><span class="flow-state">{html.escape(label)}</span><strong>{n:02d} · {html.escape(step["label"])}</strong><span>{step["done"]}/{step["total"]} {word("Verified tasks",language)}</span></li>')
     active = [s["label"] for s in data["steps"] if s["mark"] in {"/", "!"}]
     summary = " · ".join(active) if active else ("All steps verified" if data["total"] and data["done"] == data["total"] else "No active step recorded")
     progress = f'<progress value="{data["done"]}" max="{data["total"]}" aria-label="Verified tasks"></progress>' if data["total"] else ""
-    html_flow = f'<div class="phase-progress" data-tasks="{data["total"]}" data-done="{data["done"]}"><div class="flow-summary"><strong>{word("Verified tasks",language)}: {data["done"]}/{data["total"]}</strong><span>{html.escape(summary)}</span></div>{progress}<div class="flow-visual">{svg}</div><ol class="flow-list">{"".join(list_items)}</ol><p class="visual-note">Steps show planned order; activity may overlap. Task counts are not effort estimates.</p></div>'
+    html_flow = f'<div class="phase-progress" data-tasks="{data["total"]}" data-done="{data["done"]}"><div class="flow-summary"><strong>{word("Verified tasks",language)}: {data["done"]}/{data["total"]}</strong><span>{html.escape(summary)}</span></div>{progress}{flow}<p class="visual-note">Steps show planned order; activity may overlap. Task counts are not effort estimates.</p></div>'
     md_charts, html_charts = [], []
     test_md,test_html='',''
     if data['test_run']:
@@ -148,25 +130,27 @@ def outputs(root, phase, items):
         test_html=f'<aside class="test-run-summary"><h3>Latest test run</h3><p>{html.escape(note)}</p><p><a href="{html.escape(link,quote=True)}">Full report and all failure traces</a> · <a href="{html.escape(source,quote=True)}">Raw results</a></p>'
         failed=[c for c in run['cases'] if c['outcome'] in test_reporting.BAD]
         if failed:
-            svg=test_reporting.workflow(failed[0],'phase-test-'+__import__('hashlib').sha256(str(path).encode()).hexdigest()[:8])
-            asset=directory/'test-failure-flow.svg';assets[asset]=svg
-            test_md+='First failed record (all failures are in the full report):\n\n![Observed test failure](test-failure-flow.svg)\n\n'+test_reporting.workflow_markdown(failed[0])+'\n\n'
+            flow_page=test_reporting.workflow(failed[0],'phase-test-'+__import__('hashlib').sha256(str(path).encode()).hexdigest()[:8])
+            asset=directory/'test-failure-flow.html';assets[asset]=flow_page
+            test_md+='First failed record (all failures are in the full report):\n\n[Observed test failure](test-failure-flow.html)\n\n'+test_reporting.workflow_markdown(failed[0])+'\n\n'
             test_html+='<p>First failed record; the full report contains every failure.</p>'+test_reporting.workflow_html(failed[0],'phase-test-view')
         test_html+='</aside>'
     for chart in data["charts"]:
-        relative = "charts/"+chart["id"]+".svg"
-        assets[directory / relative] = chart["svg"]
+        relative = "charts/"+chart["id"]+".html"
+        chart_document = html_shapes.document(chart['title'],chart['html'])
+        assets[directory / relative] = chart_document
+        asset_checksum = hashlib.sha256(chart_document.encode('utf-8')).hexdigest()
         source = os.path.relpath(root / chart["source"]["path"], directory).replace(os.sep,"/")
         columns = " | ".join(markdown_cell(f) for f in chart["fields"])
         table = '| '+columns+' |\n| '+' | '.join('---' for _ in chart["fields"])+' |\n'
         table += "\n".join('| '+" | ".join(markdown_cell(v) for v in row)+' |' for row in chart["rows"][:100])
         preview = f"Showing the first 100 of {len(chart['rows'])} rows; full values remain in the JSON source." if len(chart["rows"])>100 else ""
         annotation = "\n".join('- '+note for note in chart["annotations"])
-        md_charts.append(f'### Chart: {chart["title"]}\n\n{chart["question"]}\n\n![{chart["title"]}]({relative})\n\n**Why this chart:** {chart["why"]}\n\n{chart["takeaway"]}\n\n{annotation}\n\n**Source:** [{chart["source"]["path"]}]({source}) · JSON pointer `{chart["source"].get("pointer", "")}` · SHA-256 `{chart["sha256"]}`\n\n**Limits:** {chart["limits"]}\n\n{preview}\n\n<details>\n<summary>Source values</summary>\n\n{table}\n\n</details>')
+        md_charts.append(f'### Chart: {chart["title"]}\n\n{chart["question"]}\n\n[View {chart["title"]}]({relative})\n\n**Why this chart:** {chart["why"]}\n\n{chart["takeaway"]}\n\n{annotation}\n\n**Source:** [{chart["source"]["path"]}]({source}) · JSON pointer `{chart["source"].get("pointer", "")}` · SHA-256 `{chart["sha256"]}`\n\n**Limits:** {chart["limits"]}\n\n{preview}\n\n<details>\n<summary>Source values</summary>\n\n{table}\n\n</details>')
         th = "".join('<th>'+html.escape(str(f))+'</th>' for f in chart["fields"])
         tr = "".join('<tr>'+"".join('<td>'+html.escape(str(v))+'</td>' for v in row)+'</tr>' for row in chart["rows"][:100])
         notes = "".join('<li>'+html.escape(note)+'</li>' for note in chart["annotations"])
-        html_charts.append(f'<figure class="evidence-chart" data-chart="{chart["type"]}" data-source-sha256="{chart["sha256"]}"><header><h3>{html.escape(chart["title"])}</h3><p>{html.escape(chart["question"])}</p></header>{html_visual(chart["svg"])}<figcaption><p class="chart-takeaway">{html.escape(chart["takeaway"])}</p><p><strong>Why this chart:</strong> {html.escape(chart["why"])}</p><ul>{notes}</ul><p><strong>Limits:</strong> {html.escape(chart["limits"])}</p><p class="source-note"><strong>Source:</strong> <a href="{html.escape(source,quote=True)}">{html.escape(chart["source"]["path"])}</a> · {html.escape(chart["source"].get("pointer",""))} · SHA-256 <code>{chart["sha256"]}</code></p></figcaption><p>{preview}</p><details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr>{th}</tr></thead><tbody>{tr}</tbody></table></div></details></figure>')
+        html_charts.append(f'<figure class="evidence-chart" data-asset-sha256="{asset_checksum}" data-chart="{chart["type"]}" data-source-sha256="{chart["sha256"]}"><header><h3>{html.escape(chart["title"])}</h3><p>{html.escape(chart["question"])}</p></header>{html_visual(chart["html"])}<figcaption><p class="chart-takeaway">{html.escape(chart["takeaway"])}</p><p><strong>Why this chart:</strong> {html.escape(chart["why"])}</p><ul>{notes}</ul><p><strong>Limits:</strong> {html.escape(chart["limits"])}</p><p class="source-note"><strong>Source:</strong> <a href="{html.escape(source,quote=True)}">{html.escape(chart["source"]["path"])}</a> · {html.escape(chart["source"].get("pointer",""))} · SHA-256 <code>{chart["sha256"]}</code></p></figcaption><p>{preview}</p><details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr>{th}</tr></thead><tbody>{tr}</tbody></table></div></details></figure>')
     if not data["charts"]:
         empty = word("No measured results yet.",language)
         md_charts = ['## Evidence charts\n\n'+empty]

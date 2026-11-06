@@ -20,17 +20,19 @@ class ReportVisualTests(unittest.TestCase):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name);(self.root/'.project-docs').mkdir()
         self.md=self.root/'project/results/test-results.md';self.md.parent.mkdir(parents=True)
-        self.md.write_text('## Comparison (Task 2.10)\n\n| Option | RAM |\n|---|---|\n| A | 12 |\n| B | 8 |\n\n![RAM](charts/ram.svg)\n')
-        self.html=self.md.with_suffix('.html');self.html.write_text('<section id="comparison"><img src="charts/ram.svg"></section>')
-        self.phase=self.root/'project/phases/phase-2/presentation.html';self.phase.parent.mkdir(parents=True);self.phase.write_text('<section id="result"><img src="../../results/charts/ram.svg"></section>')
+        self.md.write_text('## Comparison (Task 2.10)\n\n| Option | RAM |\n|---|---|\n| A | 12 |\n| B | 8 |\n\n[RAM](charts/ram.html)\n')
+        self.html=self.md.with_suffix('.html')
+        self.phase=self.root/'project/phases/phase-2/presentation.html';self.phase.parent.mkdir(parents=True)
         (self.phase.parent/'tasks.md').write_text('# PHASE 2: Fixture\n')
-        self.asset=self.root/'project/results/charts/ram.svg';self.asset.parent.mkdir();self.asset.write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"><title>RAM</title></svg>')
+        self.asset=self.root/'project/results/charts/ram.html';self.asset.parent.mkdir();self.asset.write_text('<html><body><div>RAM</div></body></html>')
+        self.html.write_text('<section id="comparison"><div data-asset-sha256="'+checksum(self.asset)+'">RAM</div></section>')
+        self.phase.write_text('<section id="result"><div data-asset-sha256="'+checksum(self.asset)+'">RAM</div></section>')
         self.generator=self.root/'scripts/plot.py';self.generator.parent.mkdir();self.generator.write_text('# Project-owned real generator fixture\n')
         self.sources=[]
         for name in ['local','remote']:
             path=self.root/(name+'.json');path.write_text('{"measurement":1}');self.sources.append({'path':path.name,'sha256':checksum(path)})
         self.section={'heading':'Comparison (Task 2.10)','html_id':'comparison','question':'Which uses less RAM?','limitations':'Fixture values; no performance claim.',
-            'sources':self.sources,'visuals':[{'asset':'project/results/charts/ram.svg','sha256':checksum(self.asset),'generator':'scripts/plot.py','generator_sha256':checksum(self.generator)}],
+            'sources':self.sources,'visuals':[{'asset':'project/results/charts/ram.html','sha256':checksum(self.asset),'generator':'scripts/plot.py','generator_sha256':checksum(self.generator)}],
             'presentations':[{'path':'project/phases/phase-2/presentation.html','html_id':'result'}]}
         self.data={'version':1,'reports':[{'markdown':'project/results/test-results.md','html':'project/results/test-results.html','sections':[self.section]}]}
 
@@ -48,7 +50,7 @@ class ReportVisualTests(unittest.TestCase):
         self.assertEqual({str(p):p.read_bytes() for p in self.root.rglob('*') if p.is_file()},before)
 
     def test_old_chart_in_another_section_does_not_cover_new_results(self):
-        self.save();self.md.write_text(self.md.read_text().replace('![RAM](charts/ram.svg)','')+'\n## Historical comparison\n![Old](charts/ram.svg)\n')
+        self.save();self.md.write_text(self.md.read_text().replace('[RAM](charts/ram.html)','')+'\n## Historical comparison\n[Old](charts/ram.html)\n')
         self.assertIn('missing-markdown-visual',self.codes())
         self.md.write_text(self.md.read_text()+'\n## New Option comparison\n| A | 5 |\n| B | 6 |\n')
         self.assertIn('unregistered-result-section',self.codes())
@@ -65,7 +67,7 @@ class ReportVisualTests(unittest.TestCase):
 
     def test_missing_visual_or_scratch_generator_cannot_be_finished(self):
         self.section['visuals']=[];self.save();self.assertIn('missing-result-visual',self.codes())
-        self.section['visuals']=[{'asset':'project/results/charts/ram.svg','sha256':checksum(self.asset),'generator':'../scratch.py','generator_sha256':'0'*64}]
+        self.section['visuals']=[{'asset':'project/results/charts/ram.html','sha256':checksum(self.asset),'generator':'../scratch.py','generator_sha256':'0'*64}]
         self.save();self.assertIn('stale-visual-input',self.codes())
 
     def test_explicit_table_only_requires_concrete_decision_and_paired_report(self):
@@ -75,15 +77,15 @@ class ReportVisualTests(unittest.TestCase):
         self.assertEqual(inspect(self.root,True)['status'],'passed')
         self.html.unlink();self.assertIn('missing-paired-html',self.codes())
 
-    def test_inline_svg_checksum_and_fenced_examples(self):
+    def test_inline_html_checksum_and_fenced_examples(self):
         self.save();sha=checksum(self.asset)
-        self.html.write_text('<section id="comparison"><svg data-asset-sha256="'+sha+'"></svg></section>')
+        self.html.write_text('<section id="comparison"><div data-asset-sha256="'+sha+'">RAM</div></section>')
         self.md.write_text(self.md.read_text()+'\n```markdown\n## Fake\n| X | 3 |\n| Y | 4 |\n```\n')
         self.assertEqual(inspect(self.root,True)['status'],'passed')
 
-    def test_markdown_raw_html_images_are_real_embeds_too(self):
-        self.save();self.md.write_text(self.md.read_text().replace('![RAM](charts/ram.svg)','<img src="charts/ram.svg" alt="RAM">'))
-        self.assertEqual(inspect(self.root,True)['status'],'passed')
+    def test_svg_asset_is_rejected(self):
+        self.save();self.asset.write_text('<svg></svg>');self.section['visuals'][0]['sha256']=checksum(self.asset);self.save()
+        self.assertIn('invalid-html-visual',self.codes())
 
     def test_unclosed_fence_does_not_hide_uncovered_results_as_not_applicable(self):
         self.md.write_text('```markdown\n'+self.md.read_text())

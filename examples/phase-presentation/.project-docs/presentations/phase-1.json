@@ -78,7 +78,7 @@
         "before_ms",
         "after_ms"
       ],
-      "asset": "project/results/charts/paired.svg",
+      "asset": "project/results/charts/paired.html",
       "generator": "build_paired_chart.py",
       "reason": "A paired-dot chart preserves the before/after relationship for each scenario without implying a time series."
     }

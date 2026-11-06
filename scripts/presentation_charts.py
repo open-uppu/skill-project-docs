@@ -1,4 +1,4 @@
-"""Evidence-backed SVG charts for Markdown and self-contained HTML presentations.
+"""Evidence-backed HTML charts for Markdown and self-contained presentations.
 
 Pure standard-library rendering; source JSON remains the owner of every value.
 """
@@ -12,8 +12,8 @@ import re
 import textwrap
 from datetime import datetime, timezone
 from pathlib import Path
-from xml.etree import ElementTree as ET
 import chart_families
+import html_shapes as shapes
 
 PALETTE = ["#17665c", "#4366a0", "#9c5c16", "#8561a6", "#b04e54", "#497c85"]
 CHOICES = {"comparison": "bar", "trend": "line", "relationship": "scatter", "composition": "stacked-bar", "matrix": "heatmap"}
@@ -33,8 +33,8 @@ def escape(value):
     return html.escape(str(value), quote=True)
 
 
-def html_visual(svg):
-    return '<p class="chart-overflow-hint">Scroll horizontally when needed; exact values are in the source table.</p><div class="chart-visual" tabindex="0" aria-label="Scrollable chart; source values follow">'+svg+'</div>'
+def html_visual(visual):
+    return '<p class="chart-overflow-hint">Scroll horizontally when needed; exact values are in the source table.</p><div class="chart-visual" tabindex="0" aria-label="Scrollable chart; source values follow">'+visual+'</div>'
 
 
 def inside(root, value):
@@ -70,8 +70,7 @@ def source_rows(root, spec):
     return data, hashlib.sha256(raw).hexdigest()
 
 
-def svg_text(x, y, value, size=14, anchor="start", fill="#273d45"):
-    return f'<text x="{x:.2f}" y="{y:.2f}" font-size="{size}" text-anchor="{anchor}" fill="{fill}">{escape(value)}</text>'
+html_text = shapes.text
 
 
 def selected_type(spec):
@@ -85,48 +84,28 @@ def selected_type(spec):
     return typ
 
 
-def custom_svg(root, spec, checksum):
+def custom_html(root, spec, checksum):
     if not spec.get("reason"):
         raise ValueError("custom chart requires a reason for the custom encoding")
     asset = inside(root, spec["asset"])
     generator = inside(root, spec["generator"])
+    if asset.suffix.lower() not in {'.html', '.htm'}:
+        raise ValueError('custom chart asset must be HTML')
     if not generator.is_file():
         raise ValueError("custom chart generator does not exist")
     raw = asset.read_text(encoding="utf-8")
-    if "<!DOCTYPE" in raw.upper() or "<!ENTITY" in raw.upper():
-        raise ValueError("custom SVG cannot contain external entities")
-    try:
-        doc = ET.fromstring(raw)
-    except ET.ParseError as exc:
-        raise ValueError("custom SVG is malformed") from exc
-    if doc.tag.split("}")[-1] != "svg" or not doc.get("viewBox"):
-        raise ValueError("custom asset must be an SVG with a viewBox")
-    metadata = next((n for n in doc.iter() if n.get("id") == "project-docs-source-sha256"), None)
-    if metadata is None or (metadata.text or "").strip() != checksum:
+    from ado_html_report import validate_html
+    validate_html(raw.encode('utf-8'))
+    def metadata(name):
+        match = re.search(r'<meta\s+name=["\']'+re.escape(name)+r'["\']\s+content=["\']([0-9a-f]{64})["\']\s*/?>',raw,re.I)
+        return match.group(1) if match else None
+    if metadata('project-docs-source-sha256') != checksum:
         raise ValueError("custom chart source checksum is stale or missing")
-    generator_metadata = next((n for n in doc.iter() if n.get("id") == "project-docs-generator-sha256"), None)
-    if generator_metadata is None or (generator_metadata.text or "").strip() != hashlib.sha256(generator.read_bytes()).hexdigest():
+    if metadata('project-docs-generator-sha256') != hashlib.sha256(generator.read_bytes()).hexdigest():
         raise ValueError("custom chart generator checksum is stale or missing")
-    if not any(n.tag.split("}")[-1] == "title" and n.text for n in doc):
-        raise ValueError("custom SVG needs an accessible title")
-    for node in doc.iter():
-        if node.tag.split("}")[-1] in {"script", "foreignObject", "style", "iframe", "image", "use", "animate", "set"}:
-            raise ValueError("custom SVG must be static and self-contained")
-        for key, value in node.attrib.items():
-            if key.lower() == "style" or key.lower().startswith("on") or "href" in key.lower() or "url(" in value.lower() or "javascript:" in value.lower():
-                raise ValueError("custom SVG contains active or external content")
-    # Strip XML declarations so the SVG can be embedded directly in HTML.
-    names = {n.get("id"): spec["id"]+"-"+n.get("id") for n in doc.iter() if n.get("id")}
-    # Original asset retains build metadata; the reader-facing embedded copy has
-    # provenance in its caption and does not need internal generator identifiers.
-    for child in list(doc):
-        if child.tag.split("}")[-1] == "metadata": doc.remove(child)
-    for node in doc.iter():
-        if node.get("id"): node.set("id", names[node.get("id")])
-        for key in ("aria-labelledby", "aria-describedby"):
-            if node.get(key): node.set(key, " ".join(names.get(v,v) for v in node.get(key).split()))
-    ET.register_namespace("", "http://www.w3.org/2000/svg")
-    return ET.tostring(doc, encoding="unicode")
+    body = re.search(r'<body\b[^>]*>(.*?)</body\s*>',raw,re.I|re.S)
+    if not body: raise ValueError('custom HTML needs a body')
+    return '<div role="img" aria-label="'+escape(spec['title'])+'">'+body.group(1)+'</div>'
 
 
 def render(root, spec):
@@ -142,8 +121,8 @@ def render(root, spec):
     if not re.fullmatch(r"#[0-9a-fA-F]{6}", color):
         raise ValueError("chart color must be a six-digit hex color")
     if typ in chart_families.RATIONALE:
-        svg,fields,table = chart_families.render(typ,rows,spec)
-        return package(spec,typ,svg,fields,table,checksum)
+        visual,fields,table = chart_families.render(typ,rows,spec)
+        return package(spec,typ,visual,fields,table,checksum)
     x, y = spec.get("x"), spec.get("y")
     series = spec.get("series", [])
     if series and typ != "stacked-bar": raise ValueError("series are supported by stacked-bar; use a custom chart for grouped/multiple-series views")
@@ -156,13 +135,10 @@ def render(root, spec):
     if not fields or any(not f for f in fields) or any(f not in row for row in rows for f in fields):
         raise ValueError("every source row must contain the selected chart fields")
     table = [[row[f] for f in fields] for row in rows]
-    title_id = "chart-"+spec["id"]+"-title"
-    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 460" role="img" aria-labelledby="{title_id}" style="font-family:system-ui,sans-serif">',
-             f'<title id="{title_id}">{escape(spec["title"])}</title>', f'<desc>{escape(spec["question"])}</desc>',
-             '<rect width="960" height="460" fill="#ffffff"/>']
+    parts = []
     left, right, top, bottom = 80, 918, 55, 365
     if typ == "custom":
-        svg = custom_svg(root, spec, checksum)
+        visual = custom_html(root, spec, checksum)
     elif typ in {"bar", "stacked-bar"}:
         if len({str(row[x]) for row in rows}) != len(rows):
             raise ValueError("bar categories must be unique; aggregate explicitly in the source")
@@ -173,9 +149,7 @@ def render(root, spec):
         left, right = 240, 865
         bottom = top + max(36,min(60,280/len(rows)))*len(rows)
         height = bottom+95
-        parts[0] = parts[0].replace('960 460',f'960 {height:g}')
-        parts[3] = parts[3].replace('height="460"',f'height="{height:g}"')
-        parts.append(svg_text(24,25,spec.get("x_label",x),15))
+        parts.append(html_text(24,25,spec.get("x_label",x),15))
         values = [[number(row[s["field"]]) for s in series] if series else [number(row[y])] for row in rows]
         if typ == "stacked-bar" and any(v < 0 for group in values for v in group):
             raise ValueError("stacked parts cannot be negative")
@@ -185,27 +159,27 @@ def render(root, spec):
         scale = lambda v: left+(v-lo)/(hi-lo)*(right-left)
         for tick in range(5):
             v = lo+(hi-lo)*tick/4; px = scale(v)
-            parts.append(f'<path d="M{px:.2f} {top}V{bottom}" stroke="#dce4e4"/>')
-            parts.append(svg_text(px, bottom+25, fmt(v), anchor="middle"))
+            parts.append(shapes.line(px,top,px,bottom,'#dce4e4'))
+            parts.append(html_text(px, bottom+25, fmt(v), anchor="middle"))
         gap = (bottom-top)/len(rows)
         for i, (row, group) in enumerate(zip(rows, values)):
             py = top+gap*(i+.5)
             label = str(row[x])
             lines = textwrap.wrap(label, 25)[:2] or [""]
             for j, line in enumerate(lines):
-                parts.append(svg_text(left-18, py+5+(j-(len(lines)-1)/2)*16, line, 14, "end"))
+                parts.append(html_text(left-18, py+5+(j-(len(lines)-1)/2)*16, line, 14, "end"))
             current = 0
             for n, val in enumerate(group):
                 px, end = scale(current), scale(current+val)
                 fill = PALETTE[n] if series else color
-                parts.append(f'<rect x="{min(px,end):.2f}" y="{py-min(gap*.55,30)/2:.2f}" width="{abs(end-px):.2f}" height="{min(gap*.55,30):.2f}" fill="{fill}"><title>{escape(label)}: {fmt(val)}</title></rect>')
+                parts.append(shapes.rect(min(px,end),py-min(gap*.55,30)/2,abs(end-px),min(gap*.55,30),fill,f'{label}: {fmt(val)}'))
                 current += val
-            parts.append(svg_text(935, py+5, fmt(current), 13, "end"))
-        parts.append(svg_text((left+right)/2, height-20, spec.get("y_label", y or "Total")+ (" ("+spec["unit"]+")" if spec["unit"] else ""), 15, "middle"))
+            parts.append(html_text(935, py+5, fmt(current), 13, "end"))
+        parts.append(html_text((left+right)/2, height-20, spec.get("y_label", y or "Total")+ (" ("+spec["unit"]+")" if spec["unit"] else ""), 15, "middle"))
         if series:
             for n, entry in enumerate(series):
-                parts.append(svg_text(80+n*145, 25, entry.get("label", entry["field"]), 13, fill=PALETTE[n]))
-        svg = "".join(parts)+"</svg>"
+                parts.append(html_text(80+n*145, 25, entry.get("label", entry["field"]), 13, fill=PALETTE[n]))
+        visual = shapes.chart(spec['title'],spec['question'],parts,height)
     elif typ in {"line", "scatter"}:
         if len(rows) > 1000:
             raise ValueError("more than 1000 points: aggregate explicitly or use a custom chart")
@@ -224,23 +198,22 @@ def render(root, spec):
         sy = lambda v: bottom-(v-ymin)/(ymax-ymin)*(bottom-top)
         for tick in range(5):
             v = ymin+(ymax-ymin)*tick/4; py = sy(v)
-            parts.append(f'<path d="M{left} {py:.2f}H{right}" stroke="#dce4e4"/>')
-            parts.append(svg_text(left-12, py+5, fmt(v), anchor="end"))
+            parts.append(shapes.line(left,py,right,py,'#dce4e4'))
+            parts.append(html_text(left-12, py+5, fmt(v), anchor="end"))
         indexes = sorted({round(i*(len(rows)-1)/4) for i in range(5)})
         for i in indexes:
             label = fmt(rows[i][x])
             if isinstance(rows[i][x],str):
                 same_day = len({str(row[x])[:10] for row in rows}) == 1
                 label = str(rows[i][x])[11:19] if same_day and "T" in str(rows[i][x]) else str(rows[i][x])[:10]
-            parts.append(svg_text(sx(xs[i]), bottom+28, label, 12, "middle"))
+            parts.append(html_text(sx(xs[i]), bottom+28, label, 12, "middle"))
         if typ == "line":
-            coords = " ".join(f"{sx(a):.2f},{sy(b):.2f}" for a,b in zip(xs,ys))
-            parts.append(f'<polyline points="{coords}" fill="none" stroke="{color}" stroke-width="3"/>')
+            parts.append(shapes.polyline([(sx(a),sy(b)) for a,b in zip(xs,ys)],color))
         for row, a, b in zip(rows, xs, ys):
-            parts.append(f'<circle cx="{sx(a):.2f}" cy="{sy(b):.2f}" r="5" fill="{color}"><title>{escape(row[x])}: {fmt(b)}</title></circle>')
-        parts.append(svg_text(left, 25, spec.get("y_label", y)+(" ("+spec["unit"]+")" if spec["unit"] else ""), 15))
-        parts.append(svg_text((left+right)/2, 430, spec.get("x_label", x), 15, "middle"))
-        svg = "".join(parts)+"</svg>"
+            parts.append(shapes.dot(sx(a),sy(b),5,color,f'{row[x]}: {fmt(b)}'))
+        parts.append(html_text(left, 25, spec.get("y_label", y)+(" ("+spec["unit"]+")" if spec["unit"] else ""), 15))
+        parts.append(html_text((left+right)/2, 430, spec.get("x_label", x), 15, "middle"))
+        visual = shapes.chart(spec['title'],spec['question'],parts,460)
     else:
         xs, ys = list(dict.fromkeys(str(row[x]) for row in rows)), list(dict.fromkeys(str(row[y]) for row in rows))
         if len(xs) > 12 or len(ys) > 12:
@@ -250,8 +223,8 @@ def render(root, spec):
         low, high = min(cells.values()), max(cells.values())
         left = 180
         cw, ch = (right-left)/len(xs), (bottom-top)/len(ys)
-        for i, label in enumerate(xs): parts.append(svg_text(left+cw*(i+.5), bottom+25, label, 12, "middle"))
-        for j, label in enumerate(ys): parts.append(svg_text(left-15, top+ch*(j+.5)+5, label, 13, "end"))
+        for i, label in enumerate(xs): parts.append(html_text(left+cw*(i+.5), bottom+25, label, 12, "middle"))
+        for j, label in enumerate(ys): parts.append(html_text(left-15, top+ch*(j+.5)+5, label, 13, "end"))
         for j, yy in enumerate(ys):
             for i, xx in enumerate(xs):
                 val = cells.get((xx, yy))
@@ -261,18 +234,18 @@ def render(root, spec):
                 linear=[v/255/12.92 if v/255<=.04045 else ((v/255+.055)/1.055)**2.4 for v in rgb]
                 luminance=sum(a*b for a,b in zip(linear,(.2126,.7152,.0722)))
                 foreground='#ffffff' if 1.05/(luminance+.05)>=(luminance+.05)/.05 else '#000000'
-                parts.append(f'<rect x="{left+i*cw:.2f}" y="{top+j*ch:.2f}" width="{cw-3:.2f}" height="{ch-3:.2f}" fill="{fill}"/>')
-                parts.append(svg_text(left+cw*(i+.5), top+ch*(j+.5)+5, fmt(val) if val is not None else "No data", 14, "middle", foreground if val is not None else "#273d45"))
-        parts.append(svg_text(left, 420, f"Color scale: {fmt(low)} to {fmt(high)} {spec['unit']}. Missing cells are not zero.", 14))
-        svg = "".join(parts)+"</svg>"
-    return package(spec,typ,svg,fields,table,checksum)
+                parts.append(shapes.rect(left+i*cw,top+j*ch,cw-3,ch-3,fill))
+                parts.append(html_text(left+cw*(i+.5), top+ch*(j+.5)+5, fmt(val) if val is not None else "No data", 14, "middle", foreground if val is not None else "#273d45"))
+        parts.append(html_text(left, 420, f"Color scale: {fmt(low)} to {fmt(high)} {spec['unit']}. Missing cells are not zero.", 14))
+        visual = shapes.chart(spec['title'],spec['question'],parts,460)
+    return package(spec,typ,visual,fields,table,checksum)
 
 
-def package(spec,typ,svg,fields,table,checksum):
+def package(spec,typ,visual,fields,table,checksum):
     notes = spec.get("annotations", [])
     if not isinstance(notes, list) or not all(isinstance(note, str) for note in notes):
         raise ValueError("annotations must be a list of evidence-backed text notes")
     return {"id": spec["id"], "title": spec["title"], "question": spec["question"], "type": typ,
-            "svg": svg, "fields": fields, "rows": table, "source": spec["source"], "sha256": checksum,
+            "html": visual, "fields": fields, "rows": table, "source": spec["source"], "sha256": checksum,
             "why": spec.get("reason", RATIONALE[typ]), "limits": spec["limitations"],
             "takeaway": spec.get("takeaway", ""), "annotations": notes}

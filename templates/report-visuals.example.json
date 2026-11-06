@@ -17,7 +17,7 @@
           ],
           "visuals": [
             {
-              "asset": "project/results/charts/container-comparison.svg",
+              "asset": "project/results/charts/container-comparison.html",
               "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
               "generator": "scripts/build_container_comparison.py",
               "generator_sha256": "0000000000000000000000000000000000000000000000000000000000000000"

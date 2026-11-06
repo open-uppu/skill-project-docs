@@ -27,7 +27,7 @@ The project lead decides from real numbers and diagrams, reads fast, gives short
 
 **Results = numbers + charts**
 - A results page holds results only: tables, numbers and charts. No sequence diagrams there; call flows belong on an explanation page. The gate raises an ERROR for the pages listed in `.project-docs/config.json` → `results_only`.
-- When cutting content, **never cut charts** unless told to remove that chart. When data changes, regenerate the chart from its script; never hand-edit generated SVG.
+- When cutting content, **never cut charts** unless told to remove that chart. When data changes, regenerate the chart from its script; never hand-edit generated HTML.
 - Show raw evidence when asked (the JSON that was sent and received), not a description of it.
 
 **One name per thing**

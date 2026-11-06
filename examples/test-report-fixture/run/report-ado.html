@@ -1,0 +1,1181 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Test run report</title><style>/* Scoped styles also support presentations created with older templates. */
+.phase-progress,.evidence-chart { color:#20373f; font-family:system-ui,sans-serif; }
+.phase-progress { margin:24px 0; }
+.flow-summary { display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap; }
+.flow-summary span { color:#546a71; font-size:15px; }
+.phase-progress progress { width:100%; height:8px; margin:18px 0; accent-color:#17665c; }
+.flow-visual,.chart-visual { overflow-x:auto; border-radius:12px; }
+.chart-visual > [role="img"] { min-width:960px; }
+.chart-overflow-hint { display:none; color:#536876; font-size:14px; }
+.flow-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; list-style:none; padding:0; margin:16px 0; }
+.flow-step { display:grid; gap:7px; padding:16px; background:white; border-left:4px solid #63757b; margin:10px 0; }
+.flow-step.done { border-color:#17665c; }.flow-step.doing { border-color:#345f9a; }.flow-step.blocked { border-color:#9b5416; }
+.flow-state { font-size:13px; font-weight:600; }.flow-step>span:last-child { color:#546a71; font-size:14px; }
+.visual-note,.source-note { font-size:13px; color:#546a71; overflow-wrap:anywhere; }
+.evidence-chart { margin:0 0 30px; padding:24px; border:1px solid #d6e1e2; background:white; border-radius:12px; }
+.evidence-chart header h3 { font-size:1.4rem; margin:0 0 8px; }.evidence-chart header p { color:#546a71; }
+.evidence-chart figcaption p { margin:10px 0; }.chart-takeaway { font-weight:600; }
+.evidence-chart details { border-top:1px solid #d6e1e2; padding-top:12px; margin-top:16px; }
+.evidence-chart summary { cursor:pointer; color:#17665c; font-weight:600; }
+.evidence-chart .tbl { overflow-x:auto; }.evidence-chart table { width:100%; border-collapse:collapse; }
+.evidence-chart td,.evidence-chart th { padding:9px 14px 9px 0; text-align:left; border-bottom:1px solid #d6e1e2; }
+.evidence-chart .chart-visual { background:white; }
+.empty-results { border-left:4px solid #a7b9bd; background:#edf3f3; padding:20px; }
+.workflow-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); list-style:none; padding:0; margin:12px 0; gap:12px; }
+.workflow-list li { padding:16px; border:1px solid #d0dde3; border-left:4px solid #63757b; border-radius:6px; display:grid; gap:7px; background:#fff; }
+.workflow-list .passed { border-left-color:#17665c; }.workflow-list .bad { border-left-color:#b04e54; }
+.workflow-list strong { font-size:17px; }.workflow-list span { font-size:15px; }.workflow-list small { font-size:14px; color:#536876; }
+@media(max-width:1000px) { .chart-overflow-hint { display:block; } }
+@media(max-width:600px) { .evidence-chart { padding:14px; }.flow-summary { display:grid; } }
+@media print { .chart-overflow-hint { display:none; }.chart-visual { overflow:visible; }.evidence-chart details { display:block; }.evidence-chart { break-inside:avoid; } }
+
+    *{box-sizing:border-box}html{scroll-padding-top:var(--report-offset,90px)}body{margin:0;background:#eaf0f4;color:#172d3f;font:16px/1.6 system-ui,sans-serif}main{max-width:1120px;margin:24px auto;padding:28px;background:white;border-radius:12px}h1{font-size:clamp(28px,4vw,46px);line-height:1.15}h2{margin-top:44px}h3,summary{overflow-wrap:anywhere}a{color:#17665c}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:10px;text-align:left;border-bottom:1px solid #d0dde3;vertical-align:top}.tbl{overflow-x:auto}.badge{padding:4px 10px;border-radius:5px;background:#e5f1ed}.bad{background:#fbebeb;color:#963e44}.note{background:#f2f6f7;padding:16px;border-left:4px solid #63757b}.source-note{overflow-wrap:anywhere}.case-pager{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:14px 0}.case-pager button{font:inherit;padding:8px 12px;border:1px solid #a8b9c0;border-radius:6px;background:white;color:#17665c}.case-pager button:disabled{opacity:.5}.case{padding:16px;border:1px solid #d0dde3;margin:12px 0;border-radius:8px}input{font:inherit;padding:10px;width:100%;border:1px solid #a8b9c0;border-radius:6px}.workflow{overflow-x:auto}button,summary{cursor:pointer}.report-nav{position:sticky;top:0;padding:12px 0;background:white;z-index:5;border-bottom:1px solid #d0dde3;display:flex;gap:14px;flex-wrap:wrap;font-size:13px}a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #345f9a;outline-offset:3px}@media(max-width:600px){main{margin:0;padding:18px;border-radius:0}.dimension-table thead{display:none}.dimension-table tr{display:grid;gap:5px;padding:14px 0;border-bottom:1px solid #d0dde3}.dimension-table td{border:0;padding:3px 0}.dimension-table td:first-child{font-weight:600}.dimension-table td:nth-child(2){color:#17665c}}@media print{input,.report-nav,.case-pager{display:none}.case[hidden]{display:block!important}details{display:block}.case,figure{break-inside:avoid}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+    </style></head><body><main><h1>Test run report</h1><p>2026-10-26T12:21:19.298739+00:00</p><p>Intentional failure fixtures, not production defects. Real observed stages and timings from this demonstration.</p><p><strong class="badge bad">FAILED / INCOMPLETE</strong> · Exit code 1</p><p>7 test cases · 1 fixtures · 0 discovery records · 2 subtests</p><p class="source-note">Source: <a href="results.json">results.json</a> · SHA-256 c3efe9a8ba4a2fd978c07f91b67ed7510c81baff235408f2c9b927d05f5200c8</p><h2>Available dimensions</h2><div class="tbl"><table class="dimension-table"><thead><tr><th>Dimension</th><th>Available</th><th>Meaning</th></tr></thead><tbody><tr><td>Case outcomes</td><td>Available</td><td>Case-level records collected.</td></tr><tr><td>Duration and distribution</td><td>Available</td><td>6 non-skipped cases have usable durations. Skipped cases are excluded; unknown durations are not replaced with zero.</td></tr><tr><td>Lifecycle timing</td><td>Available</td><td>Native instrumentation observed lifecycle calls.</td></tr><tr><td>Failure locations</td><td>Available</td><td>Observed failure events; unknown stage remains explicit.</td></tr><tr><td>History trends</td><td>Not available</td><td>1 comparable runs. Historical source paths and checksums are retained.</td></tr><tr><td>Flaky candidates</td><td>Not available</td><td>No repeated eligible case ID in a matching context; one run cannot establish instability.</td></tr><tr><td>Statement coverage</td><td>Not available</td><td>No coverage file supplied. Passing tests do not imply covered statements.</td></tr><tr><td>Branch coverage</td><td>Not available</td><td>Branch coverage was not supplied; statement coverage does not establish it.</td></tr></tbody></table></div><h2>Charts</h2><figure class="evidence-chart" data-asset-sha256="67c18b9a58c7274eb6b825350b5b3d0449f722637a7b222fc43bb28754425df9"><h3>Test and fixture outcomes</h3><p class="chart-overflow-hint">Scroll horizontally when needed; exact values are in the source table.</p><div class="chart-visual" tabindex="0" aria-label="Scrollable chart; source values follow"><div role="img" aria-label="Test and fixture outcomes: Test and fixture outcomes" style="position:relative;width:960px;height:430px;background:white;font-family:system-ui,sans-serif"><span style="position:absolute;left:24.00px;top:25.00px;transform:translate(0,-80%);font-size:15px;color:#273d45;white-space:nowrap">outcome</span><div style="position:absolute;left:240.000px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:240.00px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0</span><div style="position:absolute;left:396.250px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:396.25px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">1</span><div style="position:absolute;left:552.500px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:552.50px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">2</span><div style="position:absolute;left:708.750px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:708.75px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">3</span><div style="position:absolute;left:865.000px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:865.00px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">4</span><span style="position:absolute;left:222.00px;top:80.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">passed</span><div title="passed: 1" style="position:absolute;left:240.000px;top:64.000px;width:156.250px;height:22.000px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:80.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:120.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">failed</span><div title="failed: 2" style="position:absolute;left:240.000px;top:104.000px;width:312.500px;height:22.000px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:120.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">2</span><span style="position:absolute;left:222.00px;top:160.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">error</span><div title="error: 4" style="position:absolute;left:240.000px;top:144.000px;width:625.000px;height:22.000px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:160.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">4</span><span style="position:absolute;left:222.00px;top:200.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">skipped</span><div title="skipped: 1" style="position:absolute;left:240.000px;top:184.000px;width:156.250px;height:22.000px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:200.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:240.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">expected_failure</span><div title="expected_failure: 0" style="position:absolute;left:240.000px;top:224.000px;width:0.000px;height:22.000px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:240.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">0</span><span style="position:absolute;left:222.00px;top:280.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">unexpected_success</span><div title="unexpected_success: 0" style="position:absolute;left:240.000px;top:264.000px;width:0.000px;height:22.000px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:280.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">0</span><span style="position:absolute;left:222.00px;top:320.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">interrupted</span><div title="interrupted: 0" style="position:absolute;left:240.000px;top:304.000px;width:0.000px;height:22.000px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:320.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">0</span><span style="position:absolute;left:552.50px;top:410.00px;transform:translate(-50%,-80%);font-size:15px;color:#273d45;white-space:nowrap">count (records)</span></div></div><figcaption><p><strong>Why:</strong> Aligned bars make category magnitudes easy to compare; the value axis includes zero.</p><p><strong>Limits:</strong> Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.</p><p class="source-note">Source: <a href="results.json">results.json</a> · /datasets/outcomes · SHA-256 c3efe9a8ba4a2fd978c07f91b67ed7510c81baff235408f2c9b927d05f5200c8</p></figcaption><details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr><th>outcome</th><th>count</th></tr></thead><tbody><tr><td>passed</td><td>1</td></tr><tr><td>failed</td><td>2</td></tr><tr><td>error</td><td>4</td></tr><tr><td>skipped</td><td>1</td></tr><tr><td>expected_failure</td><td>0</td></tr><tr><td>unexpected_success</td><td>0</td></tr><tr><td>interrupted</td><td>0</td></tr></tbody></table></div></details></figure><figure class="evidence-chart" data-asset-sha256="64a3b01e7b7556c1e3fee496ac553a1472ad9250b991675120c62a4efa2d24de"><h3>Outcomes by suite (minor suites explicitly grouped)</h3><p class="chart-overflow-hint">Scroll horizontally when needed; exact values are in the source table.</p><div class="chart-visual" tabindex="0" aria-label="Scrollable chart; source values follow"><div role="img" aria-label="Outcomes by suite (minor suites explicitly grouped): Outcomes by suite (minor suites explicitly grouped)" style="position:relative;width:960px;height:438px;background:white;font-family:system-ui,sans-serif"><span style="position:absolute;left:24.00px;top:25.00px;transform:translate(0,-80%);font-size:15px;color:#273d45;white-space:nowrap">suite</span><div style="position:absolute;left:240.000px;top:55.000px;width:288.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:240.00px;top:368.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0</span><div style="position:absolute;left:396.250px;top:55.000px;width:288.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:396.25px;top:368.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0.25</span><div style="position:absolute;left:552.500px;top:55.000px;width:288.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:552.50px;top:368.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0.5</span><div style="position:absolute;left:708.750px;top:55.000px;width:288.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:708.75px;top:368.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0.75</span><div style="position:absolute;left:865.000px;top:55.000px;width:288.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:865.00px;top:368.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:70.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">fixture_cases.AssertionEx</span><span style="position:absolute;left:222.00px;top:86.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">ample</span><div title="fixture_cases.AssertionExample: 0" style="position:absolute;left:240.000px;top:63.100px;width:0.000px;height:19.800px;background:#17665c"></div><div title="fixture_cases.AssertionExample: 1" style="position:absolute;left:240.000px;top:63.100px;width:625.000px;height:19.800px;background:#4366a0"></div><div title="fixture_cases.AssertionExample: 0" style="position:absolute;left:865.000px;top:63.100px;width:0.000px;height:19.800px;background:#9c5c16"></div><div title="fixture_cases.AssertionExample: 0" style="position:absolute;left:865.000px;top:63.100px;width:0.000px;height:19.800px;background:#8561a6"></div><div title="fixture_cases.AssertionExample: 0" style="position:absolute;left:865.000px;top:63.100px;width:0.000px;height:19.800px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:78.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:106.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">fixture_cases.CleanupExam</span><span style="position:absolute;left:222.00px;top:122.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">ple</span><div title="fixture_cases.CleanupExample: 0" style="position:absolute;left:240.000px;top:99.100px;width:0.000px;height:19.800px;background:#17665c"></div><div title="fixture_cases.CleanupExample: 0" style="position:absolute;left:240.000px;top:99.100px;width:0.000px;height:19.800px;background:#4366a0"></div><div title="fixture_cases.CleanupExample: 1" style="position:absolute;left:240.000px;top:99.100px;width:625.000px;height:19.800px;background:#9c5c16"></div><div title="fixture_cases.CleanupExample: 0" style="position:absolute;left:865.000px;top:99.100px;width:0.000px;height:19.800px;background:#8561a6"></div><div title="fixture_cases.CleanupExample: 0" style="position:absolute;left:865.000px;top:99.100px;width:0.000px;height:19.800px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:114.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:150.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">setUpClass (fixture_cases</span><div title="setUpClass (fixture_cases: 0" style="position:absolute;left:240.000px;top:135.100px;width:0.000px;height:19.800px;background:#17665c"></div><div title="setUpClass (fixture_cases: 0" style="position:absolute;left:240.000px;top:135.100px;width:0.000px;height:19.800px;background:#4366a0"></div><div title="setUpClass (fixture_cases: 1" style="position:absolute;left:240.000px;top:135.100px;width:625.000px;height:19.800px;background:#9c5c16"></div><div title="setUpClass (fixture_cases: 0" style="position:absolute;left:865.000px;top:135.100px;width:0.000px;height:19.800px;background:#8561a6"></div><div title="setUpClass (fixture_cases: 0" style="position:absolute;left:865.000px;top:135.100px;width:0.000px;height:19.800px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:150.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:178.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">fixture_cases.PassingExam</span><span style="position:absolute;left:222.00px;top:194.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">ple</span><div title="fixture_cases.PassingExample: 1" style="position:absolute;left:240.000px;top:171.100px;width:625.000px;height:19.800px;background:#17665c"></div><div title="fixture_cases.PassingExample: 0" style="position:absolute;left:865.000px;top:171.100px;width:0.000px;height:19.800px;background:#4366a0"></div><div title="fixture_cases.PassingExample: 0" style="position:absolute;left:865.000px;top:171.100px;width:0.000px;height:19.800px;background:#9c5c16"></div><div title="fixture_cases.PassingExample: 0" style="position:absolute;left:865.000px;top:171.100px;width:0.000px;height:19.800px;background:#8561a6"></div><div title="fixture_cases.PassingExample: 0" style="position:absolute;left:865.000px;top:171.100px;width:0.000px;height:19.800px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:186.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:214.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">fixture_cases.SetupExampl</span><span style="position:absolute;left:222.00px;top:230.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">e</span><div title="fixture_cases.SetupExample: 0" style="position:absolute;left:240.000px;top:207.100px;width:0.000px;height:19.800px;background:#17665c"></div><div title="fixture_cases.SetupExample: 0" style="position:absolute;left:240.000px;top:207.100px;width:0.000px;height:19.800px;background:#4366a0"></div><div title="fixture_cases.SetupExample: 1" style="position:absolute;left:240.000px;top:207.100px;width:625.000px;height:19.800px;background:#9c5c16"></div><div title="fixture_cases.SetupExample: 0" style="position:absolute;left:865.000px;top:207.100px;width:0.000px;height:19.800px;background:#8561a6"></div><div title="fixture_cases.SetupExample: 0" style="position:absolute;left:865.000px;top:207.100px;width:0.000px;height:19.800px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:222.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:250.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">fixture_cases.SkippedExam</span><span style="position:absolute;left:222.00px;top:266.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">ple</span><div title="fixture_cases.SkippedExample: 0" style="position:absolute;left:240.000px;top:243.100px;width:0.000px;height:19.800px;background:#17665c"></div><div title="fixture_cases.SkippedExample: 0" style="position:absolute;left:240.000px;top:243.100px;width:0.000px;height:19.800px;background:#4366a0"></div><div title="fixture_cases.SkippedExample: 0" style="position:absolute;left:240.000px;top:243.100px;width:0.000px;height:19.800px;background:#9c5c16"></div><div title="fixture_cases.SkippedExample: 1" style="position:absolute;left:240.000px;top:243.100px;width:625.000px;height:19.800px;background:#8561a6"></div><div title="fixture_cases.SkippedExample: 0" style="position:absolute;left:865.000px;top:243.100px;width:0.000px;height:19.800px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:258.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:286.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">fixture_cases.SubtestExam</span><span style="position:absolute;left:222.00px;top:302.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">ple</span><div title="fixture_cases.SubtestExample: 0" style="position:absolute;left:240.000px;top:279.100px;width:0.000px;height:19.800px;background:#17665c"></div><div title="fixture_cases.SubtestExample: 1" style="position:absolute;left:240.000px;top:279.100px;width:625.000px;height:19.800px;background:#4366a0"></div><div title="fixture_cases.SubtestExample: 0" style="position:absolute;left:865.000px;top:279.100px;width:0.000px;height:19.800px;background:#9c5c16"></div><div title="fixture_cases.SubtestExample: 0" style="position:absolute;left:865.000px;top:279.100px;width:0.000px;height:19.800px;background:#8561a6"></div><div title="fixture_cases.SubtestExample: 0" style="position:absolute;left:865.000px;top:279.100px;width:0.000px;height:19.800px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:294.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:322.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">fixture_cases.TeardownExa</span><span style="position:absolute;left:222.00px;top:338.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">mple</span><div title="fixture_cases.TeardownExample: 0" style="position:absolute;left:240.000px;top:315.100px;width:0.000px;height:19.800px;background:#17665c"></div><div title="fixture_cases.TeardownExample: 0" style="position:absolute;left:240.000px;top:315.100px;width:0.000px;height:19.800px;background:#4366a0"></div><div title="fixture_cases.TeardownExample: 1" style="position:absolute;left:240.000px;top:315.100px;width:625.000px;height:19.800px;background:#9c5c16"></div><div title="fixture_cases.TeardownExample: 0" style="position:absolute;left:865.000px;top:315.100px;width:0.000px;height:19.800px;background:#8561a6"></div><div title="fixture_cases.TeardownExample: 0" style="position:absolute;left:865.000px;top:315.100px;width:0.000px;height:19.800px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:330.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:552.50px;top:418.00px;transform:translate(-50%,-80%);font-size:15px;color:#273d45;white-space:nowrap">Total (records)</span><span style="position:absolute;left:80.00px;top:25.00px;transform:translate(0,-80%);font-size:13px;color:#17665c;white-space:nowrap">passed</span><span style="position:absolute;left:225.00px;top:25.00px;transform:translate(0,-80%);font-size:13px;color:#4366a0;white-space:nowrap">failed</span><span style="position:absolute;left:370.00px;top:25.00px;transform:translate(0,-80%);font-size:13px;color:#9c5c16;white-space:nowrap">error</span><span style="position:absolute;left:515.00px;top:25.00px;transform:translate(0,-80%);font-size:13px;color:#8561a6;white-space:nowrap">skipped</span><span style="position:absolute;left:660.00px;top:25.00px;transform:translate(0,-80%);font-size:13px;color:#b04e54;white-space:nowrap">other</span></div></div><figcaption><p><strong>Why:</strong> Segments show absolute contributions to a total; middle segments are harder to compare across groups.</p><p><strong>Limits:</strong> Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.</p><p class="source-note">Source: <a href="results.json">results.json</a> · /datasets/suite-outcomes · SHA-256 c3efe9a8ba4a2fd978c07f91b67ed7510c81baff235408f2c9b927d05f5200c8</p></figcaption><details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr><th>suite</th><th>passed</th><th>failed</th><th>error</th><th>skipped</th><th>other</th></tr></thead><tbody><tr><td>fixture_cases.AssertionExample</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>fixture_cases.CleanupExample</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>setUpClass (fixture_cases</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>fixture_cases.PassingExample</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>fixture_cases.SetupExample</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>fixture_cases.SkippedExample</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr><tr><td>fixture_cases.SubtestExample</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>fixture_cases.TeardownExample</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr></tbody></table></div></details></figure><figure class="evidence-chart" data-asset-sha256="741caf7b33a3fb839fc204c3fe60992f2824f98584cfe20ab9960aaa9d777287"><h3>Slowest cases — top 12; full inventory below</h3><p class="chart-overflow-hint">Scroll horizontally when needed; exact values are in the source table.</p><div class="chart-visual" tabindex="0" aria-label="Scrollable chart; source values follow"><div role="img" aria-label="Slowest cases — top 12; full inventory below: Slowest cases — top 12; full inventory below" style="position:relative;width:960px;height:430px;background:white;font-family:system-ui,sans-serif"><span style="position:absolute;left:24.00px;top:25.00px;transform:translate(0,-80%);font-size:15px;color:#273d45;white-space:nowrap">test</span><div style="position:absolute;left:240.000px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:240.00px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0</span><div style="position:absolute;left:396.250px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:396.25px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0.0002262</span><div style="position:absolute;left:552.500px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:552.50px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0.0004523</span><div style="position:absolute;left:708.750px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:708.75px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0.0006785</span><div style="position:absolute;left:865.000px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:865.00px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0.0009047</span><span style="position:absolute;left:222.00px;top:75.33px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">1. fixture_cases.Assertio</span><span style="position:absolute;left:222.00px;top:91.33px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">nExample.test_expected_mi</span><div title="1. fixture_cases.AssertionExample.test_expected_mismatch: 0.0009047" style="position:absolute;left:240.000px;top:65.500px;width:625.000px;height:25.667px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:83.33px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">0.0009047</span><span style="position:absolute;left:222.00px;top:122.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">2. fixture_cases.CleanupE</span><span style="position:absolute;left:222.00px;top:138.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">xample.test_cleanup_is_ob</span><div title="2. fixture_cases.CleanupExample.test_cleanup_is_observed: 8.25e-05" style="position:absolute;left:240.000px;top:112.167px;width:56.996px;height:25.667px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:130.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">8.25e-05</span><span style="position:absolute;left:222.00px;top:168.67px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">3. fixture_cases.SubtestE</span><span style="position:absolute;left:222.00px;top:184.67px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">xample.test_subtests</span><div title="3. fixture_cases.SubtestExample.test_subtests: 7.087e-05" style="position:absolute;left:240.000px;top:158.833px;width:48.965px;height:25.667px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:176.67px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">7.087e-05</span><span style="position:absolute;left:222.00px;top:215.33px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">4. fixture_cases.SetupExa</span><span style="position:absolute;left:222.00px;top:231.33px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">mple.test_not_reached</span><div title="4. fixture_cases.SetupExample.test_not_reached: 6.846e-05" style="position:absolute;left:240.000px;top:205.500px;width:47.296px;height:25.667px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:223.33px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">6.846e-05</span><span style="position:absolute;left:222.00px;top:262.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">5. fixture_cases.Teardown</span><span style="position:absolute;left:222.00px;top:278.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">Example.test_body_passes</span><div title="5. fixture_cases.TeardownExample.test_body_passes: 6.846e-05" style="position:absolute;left:240.000px;top:252.167px;width:47.296px;height:25.667px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:270.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">6.846e-05</span><span style="position:absolute;left:222.00px;top:308.67px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">6. fixture_cases.PassingE</span><span style="position:absolute;left:222.00px;top:324.67px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">xample.test_valid_result</span><div title="6. fixture_cases.PassingExample.test_valid_result: 1.529e-05" style="position:absolute;left:240.000px;top:298.833px;width:10.565px;height:25.667px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:316.67px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1.529e-05</span><span style="position:absolute;left:552.50px;top:410.00px;transform:translate(-50%,-80%);font-size:15px;color:#273d45;white-space:nowrap">seconds (s)</span></div></div><figcaption><p><strong>Why:</strong> Aligned bars make category magnitudes easy to compare; the value axis includes zero.</p><p><strong>Limits:</strong> Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.</p><p class="source-note">Source: <a href="results.json">results.json</a> · /datasets/slowest · SHA-256 c3efe9a8ba4a2fd978c07f91b67ed7510c81baff235408f2c9b927d05f5200c8</p></figcaption><details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr><th>test</th><th>seconds</th></tr></thead><tbody><tr><td>1. fixture_cases.AssertionExample.test_expected_mismatch</td><td>0.0009046669999999979</td></tr><tr><td>2. fixture_cases.CleanupExample.test_cleanup_is_observed</td><td>8.249999999999924e-05</td></tr><tr><td>3. fixture_cases.SubtestExample.test_subtests</td><td>7.087499999999802e-05</td></tr><tr><td>4. fixture_cases.SetupExample.test_not_reached</td><td>6.845899999999988e-05</td></tr><tr><td>5. fixture_cases.TeardownExample.test_body_passes</td><td>6.845899999999988e-05</td></tr><tr><td>6. fixture_cases.PassingExample.test_valid_result</td><td>1.5292000000000083e-05</td></tr></tbody></table></div></details></figure><figure class="evidence-chart" data-asset-sha256="392c1ba73fa87d2753a6965e23b647300f6ae4486d5e7268ccebfed9b4b777ad"><h3>Distribution of observed case durations</h3><p class="chart-overflow-hint">Scroll horizontally when needed; exact values are in the source table.</p><div class="chart-visual" tabindex="0" aria-label="Scrollable chart; source values follow"><div role="img" aria-label="Distribution of observed case durations: Distribution of observed case durations" style="position:relative;width:960px;height:460px;background:white;font-family:system-ui,sans-serif"><div style="position:absolute;left:85.000px;top:355.000px;width:785.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><span style="position:absolute;left:73.00px;top:359.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0</span><div style="position:absolute;left:85.000px;top:282.500px;width:785.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><span style="position:absolute;left:73.00px;top:286.50px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">1.25</span><div style="position:absolute;left:85.000px;top:210.000px;width:785.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><span style="position:absolute;left:73.00px;top:214.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">2.5</span><div style="position:absolute;left:85.000px;top:137.500px;width:785.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><span style="position:absolute;left:73.00px;top:141.50px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">3.75</span><div style="position:absolute;left:85.000px;top:65.000px;width:785.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><span style="position:absolute;left:73.00px;top:69.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">5</span><span style="position:absolute;left:85.00px;top:25.00px;transform:translate(0,-80%);font-size:14px;color:#273d45;white-space:nowrap">Observations</span><div style="position:absolute;left:85.000px;top:65.000px;width:290.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:85.00px;top:380.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">1.529e-05</span><div style="position:absolute;left:281.250px;top:65.000px;width:290.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:281.25px;top:380.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.0002376</span><div style="position:absolute;left:477.500px;top:65.000px;width:290.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:477.50px;top:380.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.00046</span><div style="position:absolute;left:673.750px;top:65.000px;width:290.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:673.75px;top:380.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.0006823</span><div style="position:absolute;left:870.000px;top:65.000px;width:290.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:870.00px;top:380.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.0009047</span><span style="position:absolute;left:477.50px;top:442.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">seconds (s)</span><div title="" style="position:absolute;left:86.000px;top:65.000px;width:259.667px;height:290.000px;background:#17665c"></div><span style="position:absolute;left:215.83px;top:59.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">5</span><div title="" style="position:absolute;left:347.667px;top:355.000px;width:259.667px;height:0.000px;background:#17665c"></div><span style="position:absolute;left:477.50px;top:349.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0</span><div title="" style="position:absolute;left:609.333px;top:297.000px;width:259.667px;height:58.000px;background:#17665c"></div><span style="position:absolute;left:739.17px;top:291.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">1</span></div></div><figcaption><p><strong>Why:</strong> Explicit bins show the distribution of raw observations; bin choice affects the apparent shape.</p><p><strong>Limits:</strong> Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.</p><p class="source-note">Source: <a href="results.json">results.json</a> · /datasets/duration-distribution · SHA-256 c3efe9a8ba4a2fd978c07f91b67ed7510c81baff235408f2c9b927d05f5200c8</p></figcaption><details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr><th>seconds</th></tr></thead><tbody><tr><td>0.0009046669999999979</td></tr><tr><td>8.249999999999924e-05</td></tr><tr><td>1.5292000000000083e-05</td></tr><tr><td>6.845899999999988e-05</td></tr><tr><td>7.087499999999802e-05</td></tr><tr><td>6.845899999999988e-05</td></tr></tbody></table></div></details></figure><figure class="evidence-chart" data-asset-sha256="9691490c8f209fc2f2391fef6695ec57a768593aef42113993c8bf7f7ae54212"><h3>Fraction of cases completed within each duration</h3><p class="chart-overflow-hint">Scroll horizontally when needed; exact values are in the source table.</p><div class="chart-visual" tabindex="0" aria-label="Scrollable chart; source values follow"><div role="img" aria-label="Fraction of cases completed within each duration: Fraction of cases completed within each duration" style="position:relative;width:960px;height:460px;background:white;font-family:system-ui,sans-serif"><div style="position:absolute;left:85.000px;top:355.000px;width:785.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><span style="position:absolute;left:73.00px;top:359.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0</span><div style="position:absolute;left:85.000px;top:282.500px;width:785.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><span style="position:absolute;left:73.00px;top:286.50px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.25</span><div style="position:absolute;left:85.000px;top:210.000px;width:785.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><span style="position:absolute;left:73.00px;top:214.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.5</span><div style="position:absolute;left:85.000px;top:137.500px;width:785.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><span style="position:absolute;left:73.00px;top:141.50px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.75</span><div style="position:absolute;left:85.000px;top:65.000px;width:785.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><span style="position:absolute;left:73.00px;top:69.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:85.00px;top:25.00px;transform:translate(0,-80%);font-size:14px;color:#273d45;white-space:nowrap">Observed cumulative fraction</span><div style="position:absolute;left:85.000px;top:65.000px;width:290.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:85.00px;top:380.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">1.529e-05</span><div style="position:absolute;left:281.250px;top:65.000px;width:290.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:281.25px;top:380.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.0002376</span><div style="position:absolute;left:477.500px;top:65.000px;width:290.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:477.50px;top:380.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.00046</span><div style="position:absolute;left:673.750px;top:65.000px;width:290.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:673.75px;top:380.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.0006823</span><div style="position:absolute;left:870.000px;top:65.000px;width:290.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:870.00px;top:380.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.0009047</span><span style="position:absolute;left:477.50px;top:442.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">seconds (s)</span><div style="position:absolute;left:85.000px;top:355.000px;width:0.000px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><div style="position:absolute;left:85.000px;top:355.000px;width:48.333px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(-90.00000deg)"></div><div style="position:absolute;left:85.000px;top:306.667px;width:46.927px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><div style="position:absolute;left:131.927px;top:306.667px;width:48.333px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(-90.00000deg)"></div><div style="position:absolute;left:131.927px;top:258.333px;width:0.000px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><div style="position:absolute;left:131.927px;top:258.333px;width:48.333px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(-90.00000deg)"></div><div style="position:absolute;left:131.927px;top:210.000px;width:2.132px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><div style="position:absolute;left:134.060px;top:210.000px;width:48.333px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(-90.00000deg)"></div><div style="position:absolute;left:134.060px;top:161.667px;width:10.261px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><div style="position:absolute;left:144.321px;top:161.667px;width:48.333px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(-90.00000deg)"></div><div style="position:absolute;left:144.321px;top:113.333px;width:725.679px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(-0.00000deg)"></div><div style="position:absolute;left:870.000px;top:113.333px;width:48.333px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(-90.00000deg)"></div></div></div><figcaption><p><strong>Why:</strong> The empirical cumulative distribution shows the observed fraction at or below each value without selecting histogram bins.</p><p><strong>Limits:</strong> Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.</p><p class="source-note">Source: <a href="results.json">results.json</a> · /datasets/duration-ecdf · SHA-256 c3efe9a8ba4a2fd978c07f91b67ed7510c81baff235408f2c9b927d05f5200c8</p></figcaption><details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr><th>seconds</th></tr></thead><tbody><tr><td>0.0009046669999999979</td></tr><tr><td>8.249999999999924e-05</td></tr><tr><td>1.5292000000000083e-05</td></tr><tr><td>6.845899999999988e-05</td></tr><tr><td>7.087499999999802e-05</td></tr><tr><td>6.845899999999988e-05</td></tr></tbody></table></div></details></figure><figure class="evidence-chart" data-asset-sha256="a8a8d1cb3f4750f776fc01306c0ca23914ec3bcd982f076142bb79db9ec3cd56"><h3>Duration spread across cases within each suite</h3><p class="chart-overflow-hint">Scroll horizontally when needed; exact values are in the source table.</p><div class="chart-visual" tabindex="0" aria-label="Scrollable chart; source values follow"><div role="img" aria-label="Duration spread across cases within each suite: Duration spread across cases within each suite" style="position:relative;width:960px;height:440px;background:white;font-family:system-ui,sans-serif"><div style="position:absolute;left:210.000px;top:65.000px;width:300.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:210.00px;top:390.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">1.529e-05</span><div style="position:absolute;left:375.000px;top:65.000px;width:300.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:375.00px;top:390.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.0002376</span><div style="position:absolute;left:540.000px;top:65.000px;width:300.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:540.00px;top:390.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.00046</span><div style="position:absolute;left:705.000px;top:65.000px;width:300.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:705.00px;top:390.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.0006823</span><div style="position:absolute;left:870.000px;top:65.000px;width:300.000px;height:1px;background:#cbd7db;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:870.00px;top:390.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">0.0009047</span><span style="position:absolute;left:540.00px;top:422.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">seconds (s)</span><span style="position:absolute;left:195.00px;top:94.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">fixture_cases.Assertion (n=1)</span><div style="position:absolute;left:870.000px;top:90.000px;width:0.000px;height:2px;background:#17665c;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><div title="" style="position:absolute;left:870.000px;top:79.000px;width:1.000px;height:22.000px;background:#dcece7"></div><div style="position:absolute;left:870.000px;top:78.000px;width:24.000px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><div title="Q1=0.0009047, median=0.0009047, Q3=0.0009047" style="position:absolute;left:868.000px;top:88.000px;width:4.000px;height:4.000px;background:#17665c;border-radius:50%"></div><span style="position:absolute;left:195.00px;top:144.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">fixture_cases.CleanupEx (n=1)</span><div style="position:absolute;left:259.875px;top:140.000px;width:0.000px;height:2px;background:#17665c;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><div title="" style="position:absolute;left:259.875px;top:129.000px;width:1.000px;height:22.000px;background:#dcece7"></div><div style="position:absolute;left:259.875px;top:128.000px;width:24.000px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><div title="Q1=8.25e-05, median=8.25e-05, Q3=8.25e-05" style="position:absolute;left:257.875px;top:138.000px;width:4.000px;height:4.000px;background:#17665c;border-radius:50%"></div><span style="position:absolute;left:195.00px;top:194.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">fixture_cases.PassingEx (n=1)</span><div style="position:absolute;left:210.000px;top:190.000px;width:0.000px;height:2px;background:#17665c;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><div title="" style="position:absolute;left:210.000px;top:179.000px;width:1.000px;height:22.000px;background:#dcece7"></div><div style="position:absolute;left:210.000px;top:178.000px;width:24.000px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><div title="Q1=1.529e-05, median=1.529e-05, Q3=1.529e-05" style="position:absolute;left:208.000px;top:188.000px;width:4.000px;height:4.000px;background:#17665c;border-radius:50%"></div><span style="position:absolute;left:195.00px;top:244.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">fixture_cases.SetupExam (n=1)</span><div style="position:absolute;left:249.455px;top:240.000px;width:0.000px;height:2px;background:#17665c;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><div title="" style="position:absolute;left:249.455px;top:229.000px;width:1.000px;height:22.000px;background:#dcece7"></div><div style="position:absolute;left:249.455px;top:228.000px;width:24.000px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><div title="Q1=6.846e-05, median=6.846e-05, Q3=6.846e-05" style="position:absolute;left:247.455px;top:238.000px;width:4.000px;height:4.000px;background:#17665c;border-radius:50%"></div><span style="position:absolute;left:195.00px;top:294.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">fixture_cases.SubtestEx (n=1)</span><div style="position:absolute;left:251.248px;top:290.000px;width:0.000px;height:2px;background:#17665c;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><div title="" style="position:absolute;left:251.248px;top:279.000px;width:1.000px;height:22.000px;background:#dcece7"></div><div style="position:absolute;left:251.248px;top:278.000px;width:24.000px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><div title="Q1=7.087e-05, median=7.087e-05, Q3=7.087e-05" style="position:absolute;left:249.248px;top:288.000px;width:4.000px;height:4.000px;background:#17665c;border-radius:50%"></div><span style="position:absolute;left:195.00px;top:344.00px;transform:translate(-100%,-80%);font-size:12px;color:#273d45;white-space:nowrap">fixture_cases.TeardownE (n=1)</span><div style="position:absolute;left:249.455px;top:340.000px;width:0.000px;height:2px;background:#17665c;transform-origin:0 50%;transform:rotate(0.00000deg)"></div><div title="" style="position:absolute;left:249.455px;top:329.000px;width:1.000px;height:22.000px;background:#dcece7"></div><div style="position:absolute;left:249.455px;top:328.000px;width:24.000px;height:3px;background:#17665c;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><div title="Q1=6.846e-05, median=6.846e-05, Q3=6.846e-05" style="position:absolute;left:247.455px;top:338.000px;width:4.000px;height:4.000px;background:#17665c;border-radius:50%"></div></div></div><figcaption><p><strong>Why:</strong> Boxes summarize raw sample distributions using linear-interpolated quartiles and Tukey 1.5-IQR whiskers; dots show outliers, not confidence intervals.</p><p><strong>Limits:</strong> Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.</p><p class="source-note">Source: <a href="results.json">results.json</a> · /datasets/suite-spread · SHA-256 c3efe9a8ba4a2fd978c07f91b67ed7510c81baff235408f2c9b927d05f5200c8</p></figcaption><details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr><th>suite</th><th>seconds</th></tr></thead><tbody><tr><td>fixture_cases.AssertionExample</td><td>0.0009046669999999979</td></tr><tr><td>fixture_cases.CleanupExample</td><td>8.249999999999924e-05</td></tr><tr><td>fixture_cases.PassingExample</td><td>1.5292000000000083e-05</td></tr><tr><td>fixture_cases.SetupExample</td><td>6.845899999999988e-05</td></tr><tr><td>fixture_cases.SubtestExample</td><td>7.087499999999802e-05</td></tr><tr><td>fixture_cases.TeardownExample</td><td>6.845899999999988e-05</td></tr></tbody></table></div></details></figure><figure class="evidence-chart" data-asset-sha256="6b8499ddb346d7a79b59c3a052e4ecad9b8b38f6657ddf20600aa021c78b55d9"><h3>Observed time by lifecycle stage</h3><p class="chart-overflow-hint">Scroll horizontally when needed; exact values are in the source table.</p><div class="chart-visual" tabindex="0" aria-label="Scrollable chart; source values follow"><div role="img" aria-label="Observed time by lifecycle stage: Observed time by lifecycle stage" style="position:relative;width:960px;height:390px;background:white;font-family:system-ui,sans-serif"><span style="position:absolute;left:24.00px;top:25.00px;transform:translate(0,-80%);font-size:15px;color:#273d45;white-space:nowrap">stage</span><div style="position:absolute;left:240.000px;top:55.000px;width:240.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:240.00px;top:320.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0</span><div style="position:absolute;left:396.250px;top:55.000px;width:240.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:396.25px;top:320.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">5.645e-06</span><div style="position:absolute;left:552.500px;top:55.000px;width:240.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:552.50px;top:320.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">1.129e-05</span><div style="position:absolute;left:708.750px;top:55.000px;width:240.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:708.75px;top:320.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">1.694e-05</span><div style="position:absolute;left:865.000px;top:55.000px;width:240.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:865.00px;top:320.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">2.258e-05</span><span style="position:absolute;left:222.00px;top:90.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">setup</span><div title="setup: 6.707e-06" style="position:absolute;left:240.000px;top:70.000px;width:185.629px;height:30.000px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:90.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">6.707e-06</span><span style="position:absolute;left:222.00px;top:150.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">test</span><div title="test: 2.258e-05" style="position:absolute;left:240.000px;top:130.000px;width:625.000px;height:30.000px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:150.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">2.258e-05</span><span style="position:absolute;left:222.00px;top:210.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">teardown</span><div title="teardown: 2.501e-06" style="position:absolute;left:240.000px;top:190.000px;width:69.220px;height:30.000px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:210.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">2.501e-06</span><span style="position:absolute;left:222.00px;top:270.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">cleanup</span><div title="cleanup: 1.5e-06" style="position:absolute;left:240.000px;top:250.000px;width:41.515px;height:30.000px;background:#17665c"></div><span style="position:absolute;left:935.00px;top:270.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1.5e-06</span><span style="position:absolute;left:552.50px;top:370.00px;transform:translate(-50%,-80%);font-size:15px;color:#273d45;white-space:nowrap">seconds (s)</span></div></div><figcaption><p><strong>Why:</strong> Aligned bars make category magnitudes easy to compare; the value axis includes zero.</p><p><strong>Limits:</strong> Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.</p><p class="source-note">Source: <a href="results.json">results.json</a> · /datasets/stage-time · SHA-256 c3efe9a8ba4a2fd978c07f91b67ed7510c81baff235408f2c9b927d05f5200c8</p></figcaption><details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr><th>stage</th><th>seconds</th></tr></thead><tbody><tr><td>setup</td><td>6.707000000001628e-06</td></tr><tr><td>test</td><td>2.258199999999322e-05</td></tr><tr><td>teardown</td><td>2.500999999988096e-06</td></tr><tr><td>cleanup</td><td>1.5000000000015001e-06</td></tr></tbody></table></div></details></figure><figure class="evidence-chart" data-asset-sha256="f3ac0a5fa20b697bbf0023426edcfb642585a48106dd10a8b9506f77ecf11f65"><h3>Failure events by observed stage (including unknown)</h3><p class="chart-overflow-hint">Scroll horizontally when needed; exact values are in the source table.</p><div class="chart-visual" tabindex="0" aria-label="Scrollable chart; source values follow"><div role="img" aria-label="Failure events by observed stage (including unknown): Failure events by observed stage (including unknown)" style="position:relative;width:960px;height:430px;background:white;font-family:system-ui,sans-serif"><span style="position:absolute;left:24.00px;top:25.00px;transform:translate(0,-80%);font-size:15px;color:#273d45;white-space:nowrap">stage</span><div style="position:absolute;left:240.000px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:240.00px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0</span><div style="position:absolute;left:396.250px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:396.25px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">0.5</span><div style="position:absolute;left:552.500px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:552.50px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">1</span><div style="position:absolute;left:708.750px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:708.75px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">1.5</span><div style="position:absolute;left:865.000px;top:55.000px;width:280.000px;height:1px;background:#dce4e4;transform-origin:0 50%;transform:rotate(90.00000deg)"></div><span style="position:absolute;left:865.00px;top:360.00px;transform:translate(-50%,-80%);font-size:14px;color:#273d45;white-space:nowrap">2</span><span style="position:absolute;left:222.00px;top:88.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">test</span><div title="test: 2" style="position:absolute;left:240.000px;top:68.000px;width:625.000px;height:30.000px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:88.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">2</span><span style="position:absolute;left:222.00px;top:144.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">cleanup</span><div title="cleanup: 1" style="position:absolute;left:240.000px;top:124.000px;width:312.500px;height:30.000px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:144.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:200.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">fixture_setup</span><div title="fixture_setup: 1" style="position:absolute;left:240.000px;top:180.000px;width:312.500px;height:30.000px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:200.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:256.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">setup</span><div title="setup: 1" style="position:absolute;left:240.000px;top:236.000px;width:312.500px;height:30.000px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:256.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:222.00px;top:312.00px;transform:translate(-100%,-80%);font-size:14px;color:#273d45;white-space:nowrap">teardown</span><div title="teardown: 1" style="position:absolute;left:240.000px;top:292.000px;width:312.500px;height:30.000px;background:#b04e54"></div><span style="position:absolute;left:935.00px;top:312.00px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">1</span><span style="position:absolute;left:552.50px;top:410.00px;transform:translate(-50%,-80%);font-size:15px;color:#273d45;white-space:nowrap">events (failure events)</span></div></div><figcaption><p><strong>Why:</strong> Aligned bars make category magnitudes easy to compare; the value axis includes zero.</p><p><strong>Limits:</strong> Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.</p><p class="source-note">Source: <a href="results.json">results.json</a> · /datasets/failure-stages · SHA-256 c3efe9a8ba4a2fd978c07f91b67ed7510c81baff235408f2c9b927d05f5200c8</p></figcaption><details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr><th>stage</th><th>events</th></tr></thead><tbody><tr><td>test</td><td>2</td></tr><tr><td>cleanup</td><td>1</td></tr><tr><td>fixture_setup</td><td>1</td></tr><tr><td>setup</td><td>1</td></tr><tr><td>teardown</td><td>1</td></tr></tbody></table></div></details></figure><figure class="evidence-chart" data-asset-sha256="9b90085d1036ac7cd94d721d18a9b8be4b371a8f6b9bca41a956a4a5b49775dd"><h3>Failure events by suite and stage</h3><p class="chart-overflow-hint">Scroll horizontally when needed; exact values are in the source table.</p><div class="chart-visual" tabindex="0" aria-label="Scrollable chart; source values follow"><div role="img" aria-label="Failure events by suite and stage: Failure events by suite and stage" style="position:relative;width:960px;height:460px;background:white;font-family:system-ui,sans-serif"><span style="position:absolute;left:253.80px;top:390.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">test</span><span style="position:absolute;left:401.40px;top:390.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">cleanup</span><span style="position:absolute;left:549.00px;top:390.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">fixture_setup</span><span style="position:absolute;left:696.60px;top:390.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">setup</span><span style="position:absolute;left:844.20px;top:390.00px;transform:translate(-50%,-80%);font-size:12px;color:#273d45;white-space:nowrap">teardown</span><span style="position:absolute;left:165.00px;top:85.83px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">fixture_cases.AssertionExample</span><span style="position:absolute;left:165.00px;top:137.50px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">fixture_cases.CleanupExample</span><span style="position:absolute;left:165.00px;top:189.17px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">setUpClass (fixture_cases</span><span style="position:absolute;left:165.00px;top:240.83px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">fixture_cases.SetupExample</span><span style="position:absolute;left:165.00px;top:292.50px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">fixture_cases.SubtestExample</span><span style="position:absolute;left:165.00px;top:344.17px;transform:translate(-100%,-80%);font-size:13px;color:#273d45;white-space:nowrap">fixture_cases.TeardownExample</span><div title="" style="position:absolute;left:180.000px;top:55.000px;width:144.600px;height:48.667px;background:rgb(23,102,92)"></div><span style="position:absolute;left:253.80px;top:85.83px;transform:translate(-50%,-80%);font-size:14px;color:#ffffff;white-space:nowrap">1</span><div title="" style="position:absolute;left:327.600px;top:55.000px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:401.40px;top:85.83px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:475.200px;top:55.000px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:549.00px;top:85.83px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:622.800px;top:55.000px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:696.60px;top:85.83px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:770.400px;top:55.000px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:844.20px;top:85.83px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:180.000px;top:106.667px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:253.80px;top:137.50px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:327.600px;top:106.667px;width:144.600px;height:48.667px;background:rgb(23,102,92)"></div><span style="position:absolute;left:401.40px;top:137.50px;transform:translate(-50%,-80%);font-size:14px;color:#ffffff;white-space:nowrap">1</span><div title="" style="position:absolute;left:475.200px;top:106.667px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:549.00px;top:137.50px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:622.800px;top:106.667px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:696.60px;top:137.50px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:770.400px;top:106.667px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:844.20px;top:137.50px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:180.000px;top:158.333px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:253.80px;top:189.17px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:327.600px;top:158.333px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:401.40px;top:189.17px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:475.200px;top:158.333px;width:144.600px;height:48.667px;background:rgb(23,102,92)"></div><span style="position:absolute;left:549.00px;top:189.17px;transform:translate(-50%,-80%);font-size:14px;color:#ffffff;white-space:nowrap">1</span><div title="" style="position:absolute;left:622.800px;top:158.333px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:696.60px;top:189.17px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:770.400px;top:158.333px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:844.20px;top:189.17px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:180.000px;top:210.000px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:253.80px;top:240.83px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:327.600px;top:210.000px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:401.40px;top:240.83px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:475.200px;top:210.000px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:549.00px;top:240.83px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:622.800px;top:210.000px;width:144.600px;height:48.667px;background:rgb(23,102,92)"></div><span style="position:absolute;left:696.60px;top:240.83px;transform:translate(-50%,-80%);font-size:14px;color:#ffffff;white-space:nowrap">1</span><div title="" style="position:absolute;left:770.400px;top:210.000px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:844.20px;top:240.83px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:180.000px;top:261.667px;width:144.600px;height:48.667px;background:rgb(23,102,92)"></div><span style="position:absolute;left:253.80px;top:292.50px;transform:translate(-50%,-80%);font-size:14px;color:#ffffff;white-space:nowrap">1</span><div title="" style="position:absolute;left:327.600px;top:261.667px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:401.40px;top:292.50px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:475.200px;top:261.667px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:549.00px;top:292.50px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:622.800px;top:261.667px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:696.60px;top:292.50px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:770.400px;top:261.667px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:844.20px;top:292.50px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:180.000px;top:313.333px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:253.80px;top:344.17px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:327.600px;top:313.333px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:401.40px;top:344.17px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:475.200px;top:313.333px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:549.00px;top:344.17px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:622.800px;top:313.333px;width:144.600px;height:48.667px;background:rgb(237,245,242)"></div><span style="position:absolute;left:696.60px;top:344.17px;transform:translate(-50%,-80%);font-size:14px;color:#000000;white-space:nowrap">0</span><div title="" style="position:absolute;left:770.400px;top:313.333px;width:144.600px;height:48.667px;background:rgb(23,102,92)"></div><span style="position:absolute;left:844.20px;top:344.17px;transform:translate(-50%,-80%);font-size:14px;color:#ffffff;white-space:nowrap">1</span><span style="position:absolute;left:180.00px;top:420.00px;transform:translate(0,-80%);font-size:14px;color:#273d45;white-space:nowrap">Color scale: 0 to 1 failure events. Missing cells are not zero.</span></div></div><figcaption><p><strong>Why:</strong> Cell color reveals patterns across two categories; use the values and table for exact comparisons.</p><p><strong>Limits:</strong> Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.</p><p class="source-note">Source: <a href="results.json">results.json</a> · /datasets/failure-map · SHA-256 c3efe9a8ba4a2fd978c07f91b67ed7510c81baff235408f2c9b927d05f5200c8</p></figcaption><details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr><th>stage</th><th>suite</th><th>failures</th></tr></thead><tbody><tr><td>test</td><td>fixture_cases.AssertionExample</td><td>1</td></tr><tr><td>cleanup</td><td>fixture_cases.AssertionExample</td><td>0</td></tr><tr><td>fixture_setup</td><td>fixture_cases.AssertionExample</td><td>0</td></tr><tr><td>setup</td><td>fixture_cases.AssertionExample</td><td>0</td></tr><tr><td>teardown</td><td>fixture_cases.AssertionExample</td><td>0</td></tr><tr><td>test</td><td>fixture_cases.CleanupExample</td><td>0</td></tr><tr><td>cleanup</td><td>fixture_cases.CleanupExample</td><td>1</td></tr><tr><td>fixture_setup</td><td>fixture_cases.CleanupExample</td><td>0</td></tr><tr><td>setup</td><td>fixture_cases.CleanupExample</td><td>0</td></tr><tr><td>teardown</td><td>fixture_cases.CleanupExample</td><td>0</td></tr><tr><td>test</td><td>setUpClass (fixture_cases</td><td>0</td></tr><tr><td>cleanup</td><td>setUpClass (fixture_cases</td><td>0</td></tr><tr><td>fixture_setup</td><td>setUpClass (fixture_cases</td><td>1</td></tr><tr><td>setup</td><td>setUpClass (fixture_cases</td><td>0</td></tr><tr><td>teardown</td><td>setUpClass (fixture_cases</td><td>0</td></tr><tr><td>test</td><td>fixture_cases.SetupExample</td><td>0</td></tr><tr><td>cleanup</td><td>fixture_cases.SetupExample</td><td>0</td></tr><tr><td>fixture_setup</td><td>fixture_cases.SetupExample</td><td>0</td></tr><tr><td>setup</td><td>fixture_cases.SetupExample</td><td>1</td></tr><tr><td>teardown</td><td>fixture_cases.SetupExample</td><td>0</td></tr><tr><td>test</td><td>fixture_cases.SubtestExample</td><td>1</td></tr><tr><td>cleanup</td><td>fixture_cases.SubtestExample</td><td>0</td></tr><tr><td>fixture_setup</td><td>fixture_cases.SubtestExample</td><td>0</td></tr><tr><td>setup</td><td>fixture_cases.SubtestExample</td><td>0</td></tr><tr><td>teardown</td><td>fixture_cases.SubtestExample</td><td>0</td></tr><tr><td>test</td><td>fixture_cases.TeardownExample</td><td>0</td></tr><tr><td>cleanup</td><td>fixture_cases.TeardownExample</td><td>0</td></tr><tr><td>fixture_setup</td><td>fixture_cases.TeardownExample</td><td>0</td></tr><tr><td>setup</td><td>fixture_cases.TeardownExample</td><td>0</td></tr><tr><td>teardown</td><td>fixture_cases.TeardownExample</td><td>1</td></tr></tbody></table></div></details></figure><h2>Failure workflows</h2><p>First 20 failed-record workflows; the inventory below retains every record and traceback.</p><h3>fixture_cases.AssertionExample.test_expected_mismatch</h3><div class="workflow"><ol class="workflow-list" role="list"><li class="passed"><strong>Setup</strong><span>Passed</span><small>8.75e-07 s</small></li><li class="bad"><strong>Test body / assertion</strong><span>Failed</span><small>4.666e-06 s</small></li><li class="passed"><strong>Teardown</strong><span>Passed</span><small>4.59e-07 s</small></li><li class=""><strong>Cleanup</strong><span>Not observed</span><small>Timing unknown</small></li></ol><p>Observed stage or explicitly unknown. A failure location is not a root-cause diagnosis.</p></div><h3>fixture_cases.CleanupExample.test_cleanup_is_observed</h3><div class="workflow"><ol class="workflow-list" role="list"><li class="passed"><strong>Setup</strong><span>Passed</span><small>1.083e-06 s</small></li><li class="passed"><strong>Test body</strong><span>Passed</span><small>1.25e-06 s</small></li><li class="passed"><strong>Teardown</strong><span>Passed</span><small>3.75e-07 s</small></li><li class="bad"><strong>Cleanup</strong><span>Failed</span><small>1.5e-06 s</small></li></ol><p>Observed stage or explicitly unknown. A failure location is not a root-cause diagnosis.</p></div><h3>setUpClass (fixture_cases.FixtureExample)</h3><div class="workflow"><ol class="workflow-list" role="list"><li class="bad"><strong>Class/module setup</strong><span>Error</span><small>Timing unknown</small></li></ol><p>Observed stage or explicitly unknown. A failure location is not a root-cause diagnosis.</p></div><h3>fixture_cases.SetupExample.test_not_reached</h3><div class="workflow"><ol class="workflow-list" role="list"><li class="bad"><strong>Setup</strong><span>Failed</span><small>1.375e-06 s</small></li><li class=""><strong>Test body</strong><span>Not observed</span><small>Timing unknown</small></li><li class=""><strong>Teardown</strong><span>Not observed</span><small>Timing unknown</small></li><li class=""><strong>Cleanup</strong><span>Not observed</span><small>Timing unknown</small></li></ol><p>Observed stage or explicitly unknown. A failure location is not a root-cause diagnosis.</p></div><h3>fixture_cases.SubtestExample.test_subtests</h3><div class="workflow"><ol class="workflow-list" role="list"><li class="passed"><strong>Setup</strong><span>Passed</span><small>1.833e-06 s</small></li><li class="passed"><strong>Test body / assertion</strong><span>Passed</span><small>1.421e-05 s</small></li><li class="passed"><strong>Teardown</strong><span>Passed</span><small>3.75e-07 s</small></li><li class=""><strong>Cleanup</strong><span>Not observed</span><small>Timing unknown</small></li></ol><p>Observed stage or explicitly unknown. A failure location is not a root-cause diagnosis.</p></div><h3>fixture_cases.TeardownExample.test_body_passes</h3><div class="workflow"><ol class="workflow-list" role="list"><li class="passed"><strong>Setup</strong><span>Passed</span><small>6.66e-07 s</small></li><li class="passed"><strong>Test body</strong><span>Passed</span><small>7.5e-07 s</small></li><li class="bad"><strong>Teardown</strong><span>Failed</span><small>8.75e-07 s</small></li><li class=""><strong>Cleanup</strong><span>Not observed</span><small>Timing unknown</small></li></ol><p>Observed stage or explicitly unknown. A failure location is not a root-cause diagnosis.</p></div><h2>Full inventory and tracebacks</h2><details class="case"><summary>FAILED · fixture_cases.AssertionExample.test_expected_mismatch</summary><p>Kind: test · Duration: 0.0009046669999999979 s</p><p><strong>Stage: test</strong> · 4 != 5 : Intentional assertion fixture</p><pre>Traceback (most recent call last):
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 59, in testPartExecutor
+    yield
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 593, in run
+    self._callTestMethod(testMethod)
+  File &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py&quot;, line 106, in wrapped
+    value=_method(*args,**kwargs)
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 550, in _callTestMethod
+    method()
+  File &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;, line 13, in test_expected_mismatch
+    def test_expected_mismatch(self):self.assertEqual(2+2,5,&#x27;Intentional assertion fixture&#x27;)
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 831, in assertEqual
+    assertion_func(first, second, msg=msg)
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 824, in _baseAssertEqual
+    raise self.failureException(msg)
+AssertionError: 4 != 5 : Intentional assertion fixture
+</pre></details><details class="case"><summary>ERROR · fixture_cases.CleanupExample.test_cleanup_is_observed</summary><p>Kind: test · Duration: 8.249999999999924e-05 s</p><p><strong>Stage: cleanup</strong> · Intentional cleanup fixture</p><pre>Traceback (most recent call last):
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 59, in testPartExecutor
+    yield
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 634, in doCleanups
+    self._callCleanup(function, *args, **kwargs)
+  File &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py&quot;, line 106, in wrapped
+    value=_method(*args,**kwargs)
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 556, in _callCleanup
+    function(*args, **kwargs)
+  File &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;, line 28, in cleanup_failure
+    def cleanup_failure(self):raise RuntimeError(&#x27;Intentional cleanup fixture&#x27;)
+RuntimeError: Intentional cleanup fixture
+</pre></details><details class="case"><summary>ERROR · setUpClass (fixture_cases.FixtureExample)</summary><p>Kind: fixture · Duration: unknown s</p><p><strong>Stage: fixture_setup</strong> · Intentional class fixture failure</p><pre>Traceback (most recent call last):
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/suite.py&quot;, line 163, in _handleClassSetUp
+    setUpClass()
+  File &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;, line 33, in setUpClass
+    def setUpClass(cls):raise RuntimeError(&#x27;Intentional class fixture failure&#x27;)
+RuntimeError: Intentional class fixture failure
+</pre></details><details class="case"><summary>PASSED · fixture_cases.PassingExample.test_valid_result</summary><p>Kind: test · Duration: 1.5292000000000083e-05 s</p></details><details class="case"><summary>ERROR · fixture_cases.SetupExample.test_not_reached</summary><p>Kind: test · Duration: 6.845899999999988e-05 s</p><p><strong>Stage: setup</strong> · Intentional setup fixture</p><pre>Traceback (most recent call last):
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 59, in testPartExecutor
+    yield
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 589, in run
+    self._callSetUp()
+  File &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py&quot;, line 106, in wrapped
+    value=_method(*args,**kwargs)
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 547, in _callSetUp
+    self.setUp()
+  File &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;, line 17, in setUp
+    def setUp(self):raise RuntimeError(&#x27;Intentional setup fixture&#x27;)
+RuntimeError: Intentional setup fixture
+</pre></details><details class="case"><summary>SKIPPED · fixture_cases.SkippedExample.test_skipped</summary><p>Kind: test · Duration: 5.041999999996771e-06 s</p><p>Skip: Intentional skipped fixture</p></details><details class="case"><summary>FAILED · fixture_cases.SubtestExample.test_subtests</summary><p>Kind: test · Duration: 7.087499999999802e-05 s</p><p><strong>Stage: test</strong> · 1 != 0 : Intentional subtest fixture</p><pre>Traceback (most recent call last):
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 59, in testPartExecutor
+    yield
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 499, in subTest
+    yield
+  File &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;, line 45, in test_subtests
+    with self.subTest(value=value):self.assertEqual(value,0,&#x27;Intentional subtest fixture&#x27;)
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 831, in assertEqual
+    assertion_func(first, second, msg=msg)
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 824, in _baseAssertEqual
+    raise self.failureException(msg)
+AssertionError: 1 != 0 : Intentional subtest fixture
+</pre></details><details class="case"><summary>ERROR · fixture_cases.TeardownExample.test_body_passes</summary><p>Kind: test · Duration: 6.845899999999988e-05 s</p><p><strong>Stage: teardown</strong> · Intentional teardown fixture</p><pre>Traceback (most recent call last):
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 59, in testPartExecutor
+    yield
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 596, in run
+    self._callTearDown()
+  File &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py&quot;, line 106, in wrapped
+    value=_method(*args,**kwargs)
+  File &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;, line 553, in _callTearDown
+    self.tearDown()
+  File &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;, line 23, in tearDown
+    def tearDown(self):raise RuntimeError(&#x27;Intentional teardown fixture&#x27;)
+RuntimeError: Intentional teardown fixture
+</pre></details><h2>Limits</h2><ul><li>Subtest durations are unknown; parent-case timing is observed.</li><li>Fixture stages are identified only from actual traceback function names; fixture durations are unknown.</li><li>History uses at most 30 earlier matching contexts; no one-run flakiness conclusion.</li><li>Coverage and branch coverage are unavailable unless measured by a supplied coverage file.</li><li>Report generation does not alter task status or diagnose root cause.</li></ul><p><a href="runner.log">Raw log: runner.log</a></p><details><summary>Raw source results.json</summary><pre>{
+  &quot;cases&quot;: [
+    {
+      &quot;id&quot;: &quot;fixture_cases.AssertionExample.test_expected_mismatch&quot;,
+      &quot;suite&quot;: &quot;fixture_cases.AssertionExample&quot;,
+      &quot;kind&quot;: &quot;test&quot;,
+      &quot;outcome&quot;: &quot;failed&quot;,
+      &quot;duration_s&quot;: 0.0009046669999999979,
+      &quot;events&quot;: [
+        {
+          &quot;stage&quot;: &quot;setup&quot;,
+          &quot;start_s&quot;: 2.9249999999994558e-05,
+          &quot;duration_s&quot;: 8.750000000043445e-07,
+          &quot;outcome&quot;: &quot;passed&quot;
+        },
+        {
+          &quot;stage&quot;: &quot;test&quot;,
+          &quot;start_s&quot;: 3.2874999999994714e-05,
+          &quot;duration_s&quot;: 4.666000000000392e-06,
+          &quot;outcome&quot;: &quot;failed&quot;
+        },
+        {
+          &quot;stage&quot;: &quot;teardown&quot;,
+          &quot;start_s&quot;: 4.191599999999601e-05,
+          &quot;duration_s&quot;: 4.5900000000126395e-07,
+          &quot;outcome&quot;: &quot;passed&quot;
+        }
+      ],
+      &quot;failures&quot;: [
+        {
+          &quot;stage&quot;: &quot;test&quot;,
+          &quot;kind&quot;: &quot;assertion&quot;,
+          &quot;message&quot;: &quot;4 != 5 : Intentional assertion fixture&quot;,
+          &quot;traceback&quot;: &quot;Traceback (most recent call last):\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 59, in testPartExecutor\n    yield\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 593, in run\n    self._callTestMethod(testMethod)\n  File \&quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py\&quot;, line 106, in wrapped\n    value=_method(*args,**kwargs)\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 550, in _callTestMethod\n    method()\n  File \&quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py\&quot;, line 13, in test_expected_mismatch\n    def test_expected_mismatch(self):self.assertEqual(2+2,5,&#x27;Intentional assertion fixture&#x27;)\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 831, in assertEqual\n    assertion_func(first, second, msg=msg)\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 824, in _baseAssertEqual\n    raise self.failureException(msg)\nAssertionError: 4 != 5 : Intentional assertion fixture\n&quot;,
+          &quot;frames&quot;: [
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 59,
+              &quot;function&quot;: &quot;testPartExecutor&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 593,
+              &quot;function&quot;: &quot;run&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py&quot;,
+              &quot;line&quot;: 106,
+              &quot;function&quot;: &quot;wrapped&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 550,
+              &quot;function&quot;: &quot;_callTestMethod&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;,
+              &quot;line&quot;: 13,
+              &quot;function&quot;: &quot;test_expected_mismatch&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 831,
+              &quot;function&quot;: &quot;assertEqual&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 824,
+              &quot;function&quot;: &quot;_baseAssertEqual&quot;
+            }
+          ]
+        }
+      ],
+      &quot;subtests&quot;: [],
+      &quot;skip_reason&quot;: null
+    },
+    {
+      &quot;id&quot;: &quot;fixture_cases.CleanupExample.test_cleanup_is_observed&quot;,
+      &quot;suite&quot;: &quot;fixture_cases.CleanupExample&quot;,
+      &quot;kind&quot;: &quot;test&quot;,
+      &quot;outcome&quot;: &quot;error&quot;,
+      &quot;duration_s&quot;: 8.249999999999924e-05,
+      &quot;events&quot;: [
+        {
+          &quot;stage&quot;: &quot;setup&quot;,
+          &quot;start_s&quot;: 0.0009467499999999962,
+          &quot;duration_s&quot;: 1.082999999998946e-06,
+          &quot;outcome&quot;: &quot;passed&quot;
+        },
+        {
+          &quot;stage&quot;: &quot;test&quot;,
+          &quot;start_s&quot;: 0.0009504159999999956,
+          &quot;duration_s&quot;: 1.2500000000012501e-06,
+          &quot;outcome&quot;: &quot;passed&quot;
+        },
+        {
+          &quot;stage&quot;: &quot;teardown&quot;,
+          &quot;start_s&quot;: 0.0009531659999999983,
+          &quot;duration_s&quot;: 3.749999999969056e-07,
+          &quot;outcome&quot;: &quot;passed&quot;
+        },
+        {
+          &quot;stage&quot;: &quot;cleanup&quot;,
+          &quot;start_s&quot;: 0.000955582999999996,
+          &quot;duration_s&quot;: 1.5000000000015001e-06,
+          &quot;outcome&quot;: &quot;error&quot;
+        }
+      ],
+      &quot;failures&quot;: [
+        {
+          &quot;stage&quot;: &quot;cleanup&quot;,
+          &quot;kind&quot;: &quot;exception&quot;,
+          &quot;message&quot;: &quot;Intentional cleanup fixture&quot;,
+          &quot;traceback&quot;: &quot;Traceback (most recent call last):\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 59, in testPartExecutor\n    yield\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 634, in doCleanups\n    self._callCleanup(function, *args, **kwargs)\n  File \&quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py\&quot;, line 106, in wrapped\n    value=_method(*args,**kwargs)\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 556, in _callCleanup\n    function(*args, **kwargs)\n  File \&quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py\&quot;, line 28, in cleanup_failure\n    def cleanup_failure(self):raise RuntimeError(&#x27;Intentional cleanup fixture&#x27;)\nRuntimeError: Intentional cleanup fixture\n&quot;,
+          &quot;frames&quot;: [
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 59,
+              &quot;function&quot;: &quot;testPartExecutor&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 634,
+              &quot;function&quot;: &quot;doCleanups&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py&quot;,
+              &quot;line&quot;: 106,
+              &quot;function&quot;: &quot;wrapped&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 556,
+              &quot;function&quot;: &quot;_callCleanup&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;,
+              &quot;line&quot;: 28,
+              &quot;function&quot;: &quot;cleanup_failure&quot;
+            }
+          ]
+        }
+      ],
+      &quot;subtests&quot;: [],
+      &quot;skip_reason&quot;: null
+    },
+    {
+      &quot;id&quot;: &quot;setUpClass (fixture_cases.FixtureExample)&quot;,
+      &quot;suite&quot;: &quot;setUpClass (fixture_cases&quot;,
+      &quot;kind&quot;: &quot;fixture&quot;,
+      &quot;outcome&quot;: &quot;error&quot;,
+      &quot;duration_s&quot;: null,
+      &quot;events&quot;: [],
+      &quot;failures&quot;: [
+        {
+          &quot;stage&quot;: &quot;fixture_setup&quot;,
+          &quot;kind&quot;: &quot;exception&quot;,
+          &quot;message&quot;: &quot;Intentional class fixture failure&quot;,
+          &quot;traceback&quot;: &quot;Traceback (most recent call last):\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/suite.py\&quot;, line 163, in _handleClassSetUp\n    setUpClass()\n  File \&quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py\&quot;, line 33, in setUpClass\n    def setUpClass(cls):raise RuntimeError(&#x27;Intentional class fixture failure&#x27;)\nRuntimeError: Intentional class fixture failure\n&quot;,
+          &quot;frames&quot;: [
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/suite.py&quot;,
+              &quot;line&quot;: 163,
+              &quot;function&quot;: &quot;_handleClassSetUp&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;,
+              &quot;line&quot;: 33,
+              &quot;function&quot;: &quot;setUpClass&quot;
+            }
+          ]
+        }
+      ],
+      &quot;subtests&quot;: [],
+      &quot;skip_reason&quot;: null
+    },
+    {
+      &quot;id&quot;: &quot;fixture_cases.PassingExample.test_valid_result&quot;,
+      &quot;suite&quot;: &quot;fixture_cases.PassingExample&quot;,
+      &quot;kind&quot;: &quot;test&quot;,
+      &quot;outcome&quot;: &quot;passed&quot;,
+      &quot;duration_s&quot;: 1.5292000000000083e-05,
+      &quot;events&quot;: [
+        {
+          &quot;stage&quot;: &quot;setup&quot;,
+          &quot;start_s&quot;: 0.001393832999999997,
+          &quot;duration_s&quot;: 8.749999999974056e-07,
+          &quot;outcome&quot;: &quot;passed&quot;
+        },
+        {
+          &quot;stage&quot;: &quot;test&quot;,
+          &quot;start_s&quot;: 0.001396833,
+          &quot;duration_s&quot;: 1.7079999999961015e-06,
+          &quot;outcome&quot;: &quot;passed&quot;
+        },
+        {
+          &quot;stage&quot;: &quot;teardown&quot;,
+          &quot;start_s&quot;: 0.0014000409999999977,
+          &quot;duration_s&quot;: 4.169999999956153e-07,
+          &quot;outcome&quot;: &quot;passed&quot;
+        }
+      ],
+      &quot;failures&quot;: [],
+      &quot;subtests&quot;: [],
+      &quot;skip_reason&quot;: null
+    },
+    {
+      &quot;id&quot;: &quot;fixture_cases.SetupExample.test_not_reached&quot;,
+      &quot;suite&quot;: &quot;fixture_cases.SetupExample&quot;,
+      &quot;kind&quot;: &quot;test&quot;,
+      &quot;outcome&quot;: &quot;error&quot;,
+      &quot;duration_s&quot;: 6.845899999999988e-05,
+      &quot;events&quot;: [
+        {
+          &quot;stage&quot;: &quot;setup&quot;,
+          &quot;start_s&quot;: 0.0014154579999999944,
+          &quot;duration_s&quot;: 1.3750000000048446e-06,
+          &quot;outcome&quot;: &quot;error&quot;
+        }
+      ],
+      &quot;failures&quot;: [
+        {
+          &quot;stage&quot;: &quot;setup&quot;,
+          &quot;kind&quot;: &quot;exception&quot;,
+          &quot;message&quot;: &quot;Intentional setup fixture&quot;,
+          &quot;traceback&quot;: &quot;Traceback (most recent call last):\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 59, in testPartExecutor\n    yield\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 589, in run\n    self._callSetUp()\n  File \&quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py\&quot;, line 106, in wrapped\n    value=_method(*args,**kwargs)\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 547, in _callSetUp\n    self.setUp()\n  File \&quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py\&quot;, line 17, in setUp\n    def setUp(self):raise RuntimeError(&#x27;Intentional setup fixture&#x27;)\nRuntimeError: Intentional setup fixture\n&quot;,
+          &quot;frames&quot;: [
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 59,
+              &quot;function&quot;: &quot;testPartExecutor&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 589,
+              &quot;function&quot;: &quot;run&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py&quot;,
+              &quot;line&quot;: 106,
+              &quot;function&quot;: &quot;wrapped&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 547,
+              &quot;function&quot;: &quot;_callSetUp&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;,
+              &quot;line&quot;: 17,
+              &quot;function&quot;: &quot;setUp&quot;
+            }
+          ]
+        }
+      ],
+      &quot;subtests&quot;: [],
+      &quot;skip_reason&quot;: null
+    },
+    {
+      &quot;id&quot;: &quot;fixture_cases.SkippedExample.test_skipped&quot;,
+      &quot;suite&quot;: &quot;fixture_cases.SkippedExample&quot;,
+      &quot;kind&quot;: &quot;test&quot;,
+      &quot;outcome&quot;: &quot;skipped&quot;,
+      &quot;duration_s&quot;: 5.041999999996771e-06,
+      &quot;events&quot;: [],
+      &quot;failures&quot;: [],
+      &quot;subtests&quot;: [],
+      &quot;skip_reason&quot;: &quot;Intentional skipped fixture&quot;
+    },
+    {
+      &quot;id&quot;: &quot;fixture_cases.SubtestExample.test_subtests&quot;,
+      &quot;suite&quot;: &quot;fixture_cases.SubtestExample&quot;,
+      &quot;kind&quot;: &quot;test&quot;,
+      &quot;outcome&quot;: &quot;failed&quot;,
+      &quot;duration_s&quot;: 7.087499999999802e-05,
+      &quot;events&quot;: [
+        {
+          &quot;stage&quot;: &quot;setup&quot;,
+          &quot;start_s&quot;: 0.001504499999999999,
+          &quot;duration_s&quot;: 1.832999999999696e-06,
+          &quot;outcome&quot;: &quot;passed&quot;
+        },
+        {
+          &quot;stage&quot;: &quot;test&quot;,
+          &quot;start_s&quot;: 0.0015082499999999957,
+          &quot;duration_s&quot;: 1.4208000000001664e-05,
+          &quot;outcome&quot;: &quot;passed&quot;
+        },
+        {
+          &quot;stage&quot;: &quot;teardown&quot;,
+          &quot;start_s&quot;: 0.0015239160000000002,
+          &quot;duration_s&quot;: 3.749999999969056e-07,
+          &quot;outcome&quot;: &quot;passed&quot;
+        }
+      ],
+      &quot;failures&quot;: [
+        {
+          &quot;stage&quot;: &quot;test&quot;,
+          &quot;kind&quot;: &quot;assertion&quot;,
+          &quot;message&quot;: &quot;1 != 0 : Intentional subtest fixture&quot;,
+          &quot;traceback&quot;: &quot;Traceback (most recent call last):\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 59, in testPartExecutor\n    yield\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 499, in subTest\n    yield\n  File \&quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py\&quot;, line 45, in test_subtests\n    with self.subTest(value=value):self.assertEqual(value,0,&#x27;Intentional subtest fixture&#x27;)\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 831, in assertEqual\n    assertion_func(first, second, msg=msg)\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 824, in _baseAssertEqual\n    raise self.failureException(msg)\nAssertionError: 1 != 0 : Intentional subtest fixture\n&quot;,
+          &quot;frames&quot;: [
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 59,
+              &quot;function&quot;: &quot;testPartExecutor&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 499,
+              &quot;function&quot;: &quot;subTest&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;,
+              &quot;line&quot;: 45,
+              &quot;function&quot;: &quot;test_subtests&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 831,
+              &quot;function&quot;: &quot;assertEqual&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 824,
+              &quot;function&quot;: &quot;_baseAssertEqual&quot;
+            }
+          ]
+        }
+      ],
+      &quot;subtests&quot;: [
+        {
+          &quot;id&quot;: &quot;fixture_cases.SubtestExample.test_subtests (value=0)&quot;,
+          &quot;outcome&quot;: &quot;passed&quot;,
+          &quot;duration_s&quot;: null
+        },
+        {
+          &quot;id&quot;: &quot;fixture_cases.SubtestExample.test_subtests (value=1)&quot;,
+          &quot;outcome&quot;: &quot;failed&quot;,
+          &quot;duration_s&quot;: null,
+          &quot;failure&quot;: {
+            &quot;stage&quot;: &quot;test&quot;,
+            &quot;kind&quot;: &quot;assertion&quot;,
+            &quot;message&quot;: &quot;1 != 0 : Intentional subtest fixture&quot;,
+            &quot;traceback&quot;: &quot;Traceback (most recent call last):\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 59, in testPartExecutor\n    yield\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 499, in subTest\n    yield\n  File \&quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py\&quot;, line 45, in test_subtests\n    with self.subTest(value=value):self.assertEqual(value,0,&#x27;Intentional subtest fixture&#x27;)\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 831, in assertEqual\n    assertion_func(first, second, msg=msg)\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 824, in _baseAssertEqual\n    raise self.failureException(msg)\nAssertionError: 1 != 0 : Intentional subtest fixture\n&quot;,
+            &quot;frames&quot;: [
+              {
+                &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+                &quot;line&quot;: 59,
+                &quot;function&quot;: &quot;testPartExecutor&quot;
+              },
+              {
+                &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+                &quot;line&quot;: 499,
+                &quot;function&quot;: &quot;subTest&quot;
+              },
+              {
+                &quot;file&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;,
+                &quot;line&quot;: 45,
+                &quot;function&quot;: &quot;test_subtests&quot;
+              },
+              {
+                &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+                &quot;line&quot;: 831,
+                &quot;function&quot;: &quot;assertEqual&quot;
+              },
+              {
+                &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+                &quot;line&quot;: 824,
+                &quot;function&quot;: &quot;_baseAssertEqual&quot;
+              }
+            ]
+          }
+        }
+      ],
+      &quot;skip_reason&quot;: null
+    },
+    {
+      &quot;id&quot;: &quot;fixture_cases.TeardownExample.test_body_passes&quot;,
+      &quot;suite&quot;: &quot;fixture_cases.TeardownExample&quot;,
+      &quot;kind&quot;: &quot;test&quot;,
+      &quot;outcome&quot;: &quot;error&quot;,
+      &quot;duration_s&quot;: 6.845899999999988e-05,
+      &quot;events&quot;: [
+        {
+          &quot;stage&quot;: &quot;setup&quot;,
+          &quot;start_s&quot;: 0.0015848749999999995,
+          &quot;duration_s&quot;: 6.659999999963917e-07,
+          &quot;outcome&quot;: &quot;passed&quot;
+        },
+        {
+          &quot;stage&quot;: &quot;test&quot;,
+          &quot;start_s&quot;: 0.0015872079999999997,
+          &quot;duration_s&quot;: 7.499999999938112e-07,
+          &quot;outcome&quot;: &quot;passed&quot;
+        },
+        {
+          &quot;stage&quot;: &quot;teardown&quot;,
+          &quot;start_s&quot;: 0.001589165999999996,
+          &quot;duration_s&quot;: 8.749999999974056e-07,
+          &quot;outcome&quot;: &quot;error&quot;
+        }
+      ],
+      &quot;failures&quot;: [
+        {
+          &quot;stage&quot;: &quot;teardown&quot;,
+          &quot;kind&quot;: &quot;exception&quot;,
+          &quot;message&quot;: &quot;Intentional teardown fixture&quot;,
+          &quot;traceback&quot;: &quot;Traceback (most recent call last):\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 59, in testPartExecutor\n    yield\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 596, in run\n    self._callTearDown()\n  File \&quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py\&quot;, line 106, in wrapped\n    value=_method(*args,**kwargs)\n  File \&quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py\&quot;, line 553, in _callTearDown\n    self.tearDown()\n  File \&quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py\&quot;, line 23, in tearDown\n    def tearDown(self):raise RuntimeError(&#x27;Intentional teardown fixture&#x27;)\nRuntimeError: Intentional teardown fixture\n&quot;,
+          &quot;frames&quot;: [
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 59,
+              &quot;function&quot;: &quot;testPartExecutor&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 596,
+              &quot;function&quot;: &quot;run&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/scripts/test_results.py&quot;,
+              &quot;line&quot;: 106,
+              &quot;function&quot;: &quot;wrapped&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/case.py&quot;,
+              &quot;line&quot;: 553,
+              &quot;function&quot;: &quot;_callTearDown&quot;
+            },
+            {
+              &quot;file&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture/fixture_cases.py&quot;,
+              &quot;line&quot;: 23,
+              &quot;function&quot;: &quot;tearDown&quot;
+            }
+          ]
+        }
+      ],
+      &quot;subtests&quot;: [],
+      &quot;skip_reason&quot;: null
+    }
+  ],
+  &quot;duration_s&quot;: 0.003001625000000001,
+  &quot;discovered_tests&quot;: 8,
+  &quot;not_run&quot;: 1,
+  &quot;discovery_duration_s&quot;: 0.0012671250000000009,
+  &quot;exit_code&quot;: 1,
+  &quot;runner_tests_run&quot;: 7,
+  &quot;runner&quot;: &quot;unittest&quot;,
+  &quot;stage_precision&quot;: &quot;instrumented&quot;,
+  &quot;limitations&quot;: [
+    &quot;Subtest durations are unknown; parent-case timing is observed.&quot;,
+    &quot;Fixture stages are identified only from actual traceback function names; fixture durations are unknown.&quot;,
+    &quot;History uses at most 30 earlier matching contexts; no one-run flakiness conclusion.&quot;,
+    &quot;Coverage and branch coverage are unavailable unless measured by a supplied coverage file.&quot;,
+    &quot;Report generation does not alter task status or diagnose root cause.&quot;
+  ],
+  &quot;schema&quot;: &quot;project-docs-tests/v1&quot;,
+  &quot;started&quot;: &quot;2026-10-26T12:21:19.298739+00:00&quot;,
+  &quot;finished&quot;: &quot;2026-10-26T12:21:19.329790+00:00&quot;,
+  &quot;selector&quot;: {
+    &quot;runner&quot;: &quot;unittest&quot;,
+    &quot;start_dir&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture&quot;,
+    &quot;pattern&quot;: &quot;fixture_cases.py&quot;,
+    &quot;failfast&quot;: false
+  },
+  &quot;context&quot;: &quot;5cbeffb4e05b46396e3e93d27a16c7c0e6a903da89ee584bd2c627c0e4e4fe4f&quot;,
+  &quot;environment&quot;: {
+    &quot;python&quot;: &quot;3.9.6&quot;,
+    &quot;platform&quot;: &quot;Darwin&quot;,
+    &quot;revision&quot;: &quot;e442072d3e5d250c4c4fc31ca03b86518327e8ac&quot;,
+    &quot;tracked_diff_sha256&quot;: &quot;c51ced72846e3442eda5730aa65739a775be4de77d846061577020469aae5ad8&quot;,
+    &quot;selector&quot;: {
+      &quot;runner&quot;: &quot;unittest&quot;,
+      &quot;start_dir&quot;: &quot;/Users/up-mac/wokrspace/mind/skill-project-docs/examples/test-report-fixture&quot;,
+      &quot;pattern&quot;: &quot;fixture_cases.py&quot;,
+      &quot;failfast&quot;: false
+    },
+    &quot;test_source_sha256&quot;: &quot;4e06e0cf5fdb46852476c356f42696fff3d369049631922ff651bc97d73567c9&quot;
+  },
+  &quot;disclaimer&quot;: &quot;Intentional failure fixtures, not production defects. Real observed stages and timings from this demonstration.&quot;,
+  &quot;logs&quot;: [
+    &quot;runner.log&quot;
+  ],
+  &quot;inputs&quot;: [],
+  &quot;summary&quot;: {
+    &quot;outcomes&quot;: {
+      &quot;failed&quot;: 2,
+      &quot;error&quot;: 4,
+      &quot;passed&quot;: 1,
+      &quot;skipped&quot;: 1,
+      &quot;expected_failure&quot;: 0,
+      &quot;unexpected_success&quot;: 0,
+      &quot;interrupted&quot;: 0
+    },
+    &quot;records&quot;: 8,
+    &quot;test_cases&quot;: 7,
+    &quot;fixture_records&quot;: 1,
+    &quot;discovery_records&quot;: 0,
+    &quot;subtests&quot;: 2,
+    &quot;pass_rate&quot;: 16.666666666666668,
+    &quot;pass_rate_denominator&quot;: 6,
+    &quot;pass_rate_definition&quot;: &quot;passed / (passed + failed + error + unexpected_success) test cases; skipped and expected failures excluded&quot;
+  },
+  &quot;status&quot;: &quot;failed&quot;,
+  &quot;tests&quot;: 7,
+  &quot;failures&quot;: 2,
+  &quot;errors&quot;: 4,
+  &quot;history&quot;: [],
+  &quot;datasets&quot;: {
+    &quot;outcomes&quot;: [
+      {
+        &quot;outcome&quot;: &quot;passed&quot;,
+        &quot;count&quot;: 1
+      },
+      {
+        &quot;outcome&quot;: &quot;failed&quot;,
+        &quot;count&quot;: 2
+      },
+      {
+        &quot;outcome&quot;: &quot;error&quot;,
+        &quot;count&quot;: 4
+      },
+      {
+        &quot;outcome&quot;: &quot;skipped&quot;,
+        &quot;count&quot;: 1
+      },
+      {
+        &quot;outcome&quot;: &quot;expected_failure&quot;,
+        &quot;count&quot;: 0
+      },
+      {
+        &quot;outcome&quot;: &quot;unexpected_success&quot;,
+        &quot;count&quot;: 0
+      },
+      {
+        &quot;outcome&quot;: &quot;interrupted&quot;,
+        &quot;count&quot;: 0
+      }
+    ],
+    &quot;suite-outcomes&quot;: [
+      {
+        &quot;suite&quot;: &quot;fixture_cases.AssertionExample&quot;,
+        &quot;passed&quot;: 0,
+        &quot;failed&quot;: 1,
+        &quot;error&quot;: 0,
+        &quot;skipped&quot;: 0,
+        &quot;other&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.CleanupExample&quot;,
+        &quot;passed&quot;: 0,
+        &quot;failed&quot;: 0,
+        &quot;error&quot;: 1,
+        &quot;skipped&quot;: 0,
+        &quot;other&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;setUpClass (fixture_cases&quot;,
+        &quot;passed&quot;: 0,
+        &quot;failed&quot;: 0,
+        &quot;error&quot;: 1,
+        &quot;skipped&quot;: 0,
+        &quot;other&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.PassingExample&quot;,
+        &quot;passed&quot;: 1,
+        &quot;failed&quot;: 0,
+        &quot;error&quot;: 0,
+        &quot;skipped&quot;: 0,
+        &quot;other&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SetupExample&quot;,
+        &quot;passed&quot;: 0,
+        &quot;failed&quot;: 0,
+        &quot;error&quot;: 1,
+        &quot;skipped&quot;: 0,
+        &quot;other&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SkippedExample&quot;,
+        &quot;passed&quot;: 0,
+        &quot;failed&quot;: 0,
+        &quot;error&quot;: 0,
+        &quot;skipped&quot;: 1,
+        &quot;other&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SubtestExample&quot;,
+        &quot;passed&quot;: 0,
+        &quot;failed&quot;: 1,
+        &quot;error&quot;: 0,
+        &quot;skipped&quot;: 0,
+        &quot;other&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.TeardownExample&quot;,
+        &quot;passed&quot;: 0,
+        &quot;failed&quot;: 0,
+        &quot;error&quot;: 1,
+        &quot;skipped&quot;: 0,
+        &quot;other&quot;: 0
+      }
+    ],
+    &quot;slowest&quot;: [
+      {
+        &quot;test&quot;: &quot;1. fixture_cases.AssertionExample.test_expected_mismatch&quot;,
+        &quot;seconds&quot;: 0.0009046669999999979
+      },
+      {
+        &quot;test&quot;: &quot;2. fixture_cases.CleanupExample.test_cleanup_is_observed&quot;,
+        &quot;seconds&quot;: 8.249999999999924e-05
+      },
+      {
+        &quot;test&quot;: &quot;3. fixture_cases.SubtestExample.test_subtests&quot;,
+        &quot;seconds&quot;: 7.087499999999802e-05
+      },
+      {
+        &quot;test&quot;: &quot;4. fixture_cases.SetupExample.test_not_reached&quot;,
+        &quot;seconds&quot;: 6.845899999999988e-05
+      },
+      {
+        &quot;test&quot;: &quot;5. fixture_cases.TeardownExample.test_body_passes&quot;,
+        &quot;seconds&quot;: 6.845899999999988e-05
+      },
+      {
+        &quot;test&quot;: &quot;6. fixture_cases.PassingExample.test_valid_result&quot;,
+        &quot;seconds&quot;: 1.5292000000000083e-05
+      }
+    ],
+    &quot;duration-distribution&quot;: [
+      {
+        &quot;seconds&quot;: 0.0009046669999999979
+      },
+      {
+        &quot;seconds&quot;: 8.249999999999924e-05
+      },
+      {
+        &quot;seconds&quot;: 1.5292000000000083e-05
+      },
+      {
+        &quot;seconds&quot;: 6.845899999999988e-05
+      },
+      {
+        &quot;seconds&quot;: 7.087499999999802e-05
+      },
+      {
+        &quot;seconds&quot;: 6.845899999999988e-05
+      }
+    ],
+    &quot;duration-ecdf&quot;: [
+      {
+        &quot;seconds&quot;: 0.0009046669999999979
+      },
+      {
+        &quot;seconds&quot;: 8.249999999999924e-05
+      },
+      {
+        &quot;seconds&quot;: 1.5292000000000083e-05
+      },
+      {
+        &quot;seconds&quot;: 6.845899999999988e-05
+      },
+      {
+        &quot;seconds&quot;: 7.087499999999802e-05
+      },
+      {
+        &quot;seconds&quot;: 6.845899999999988e-05
+      }
+    ],
+    &quot;suite-spread&quot;: [
+      {
+        &quot;suite&quot;: &quot;fixture_cases.AssertionExample&quot;,
+        &quot;seconds&quot;: 0.0009046669999999979
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.CleanupExample&quot;,
+        &quot;seconds&quot;: 8.249999999999924e-05
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.PassingExample&quot;,
+        &quot;seconds&quot;: 1.5292000000000083e-05
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SetupExample&quot;,
+        &quot;seconds&quot;: 6.845899999999988e-05
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SubtestExample&quot;,
+        &quot;seconds&quot;: 7.087499999999802e-05
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.TeardownExample&quot;,
+        &quot;seconds&quot;: 6.845899999999988e-05
+      }
+    ],
+    &quot;stage-time&quot;: [
+      {
+        &quot;stage&quot;: &quot;setup&quot;,
+        &quot;seconds&quot;: 6.707000000001628e-06
+      },
+      {
+        &quot;stage&quot;: &quot;test&quot;,
+        &quot;seconds&quot;: 2.258199999999322e-05
+      },
+      {
+        &quot;stage&quot;: &quot;teardown&quot;,
+        &quot;seconds&quot;: 2.500999999988096e-06
+      },
+      {
+        &quot;stage&quot;: &quot;cleanup&quot;,
+        &quot;seconds&quot;: 1.5000000000015001e-06
+      }
+    ],
+    &quot;failure-stages&quot;: [
+      {
+        &quot;stage&quot;: &quot;test&quot;,
+        &quot;events&quot;: 2
+      },
+      {
+        &quot;stage&quot;: &quot;cleanup&quot;,
+        &quot;events&quot;: 1
+      },
+      {
+        &quot;stage&quot;: &quot;fixture_setup&quot;,
+        &quot;events&quot;: 1
+      },
+      {
+        &quot;stage&quot;: &quot;setup&quot;,
+        &quot;events&quot;: 1
+      },
+      {
+        &quot;stage&quot;: &quot;teardown&quot;,
+        &quot;events&quot;: 1
+      }
+    ],
+    &quot;failure-map&quot;: [
+      {
+        &quot;suite&quot;: &quot;fixture_cases.AssertionExample&quot;,
+        &quot;stage&quot;: &quot;test&quot;,
+        &quot;failures&quot;: 1
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.AssertionExample&quot;,
+        &quot;stage&quot;: &quot;cleanup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.AssertionExample&quot;,
+        &quot;stage&quot;: &quot;fixture_setup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.AssertionExample&quot;,
+        &quot;stage&quot;: &quot;setup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.AssertionExample&quot;,
+        &quot;stage&quot;: &quot;teardown&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.CleanupExample&quot;,
+        &quot;stage&quot;: &quot;test&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.CleanupExample&quot;,
+        &quot;stage&quot;: &quot;cleanup&quot;,
+        &quot;failures&quot;: 1
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.CleanupExample&quot;,
+        &quot;stage&quot;: &quot;fixture_setup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.CleanupExample&quot;,
+        &quot;stage&quot;: &quot;setup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.CleanupExample&quot;,
+        &quot;stage&quot;: &quot;teardown&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;setUpClass (fixture_cases&quot;,
+        &quot;stage&quot;: &quot;test&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;setUpClass (fixture_cases&quot;,
+        &quot;stage&quot;: &quot;cleanup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;setUpClass (fixture_cases&quot;,
+        &quot;stage&quot;: &quot;fixture_setup&quot;,
+        &quot;failures&quot;: 1
+      },
+      {
+        &quot;suite&quot;: &quot;setUpClass (fixture_cases&quot;,
+        &quot;stage&quot;: &quot;setup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;setUpClass (fixture_cases&quot;,
+        &quot;stage&quot;: &quot;teardown&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SetupExample&quot;,
+        &quot;stage&quot;: &quot;test&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SetupExample&quot;,
+        &quot;stage&quot;: &quot;cleanup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SetupExample&quot;,
+        &quot;stage&quot;: &quot;fixture_setup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SetupExample&quot;,
+        &quot;stage&quot;: &quot;setup&quot;,
+        &quot;failures&quot;: 1
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SetupExample&quot;,
+        &quot;stage&quot;: &quot;teardown&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SubtestExample&quot;,
+        &quot;stage&quot;: &quot;test&quot;,
+        &quot;failures&quot;: 1
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SubtestExample&quot;,
+        &quot;stage&quot;: &quot;cleanup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SubtestExample&quot;,
+        &quot;stage&quot;: &quot;fixture_setup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SubtestExample&quot;,
+        &quot;stage&quot;: &quot;setup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.SubtestExample&quot;,
+        &quot;stage&quot;: &quot;teardown&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.TeardownExample&quot;,
+        &quot;stage&quot;: &quot;test&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.TeardownExample&quot;,
+        &quot;stage&quot;: &quot;cleanup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.TeardownExample&quot;,
+        &quot;stage&quot;: &quot;fixture_setup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.TeardownExample&quot;,
+        &quot;stage&quot;: &quot;setup&quot;,
+        &quot;failures&quot;: 0
+      },
+      {
+        &quot;suite&quot;: &quot;fixture_cases.TeardownExample&quot;,
+        &quot;stage&quot;: &quot;teardown&quot;,
+        &quot;failures&quot;: 1
+      }
+    ]
+  },
+  &quot;chart_specs&quot;: [
+    {
+      &quot;id&quot;: &quot;outcomes&quot;,
+      &quot;title&quot;: &quot;Test and fixture outcomes&quot;,
+      &quot;question&quot;: &quot;Test and fixture outcomes&quot;,
+      &quot;type&quot;: &quot;bar&quot;,
+      &quot;source&quot;: {
+        &quot;path&quot;: &quot;results.json&quot;,
+        &quot;pointer&quot;: &quot;/datasets/outcomes&quot;
+      },
+      &quot;unit&quot;: &quot;records&quot;,
+      &quot;limitations&quot;: &quot;Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.&quot;,
+      &quot;x&quot;: &quot;outcome&quot;,
+      &quot;y&quot;: &quot;count&quot;
+    },
+    {
+      &quot;id&quot;: &quot;suite-outcomes&quot;,
+      &quot;title&quot;: &quot;Outcomes by suite (minor suites explicitly grouped)&quot;,
+      &quot;question&quot;: &quot;Outcomes by suite (minor suites explicitly grouped)&quot;,
+      &quot;type&quot;: &quot;stacked-bar&quot;,
+      &quot;source&quot;: {
+        &quot;path&quot;: &quot;results.json&quot;,
+        &quot;pointer&quot;: &quot;/datasets/suite-outcomes&quot;
+      },
+      &quot;unit&quot;: &quot;records&quot;,
+      &quot;limitations&quot;: &quot;Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.&quot;,
+      &quot;x&quot;: &quot;suite&quot;,
+      &quot;series&quot;: [
+        {
+          &quot;field&quot;: &quot;passed&quot;
+        },
+        {
+          &quot;field&quot;: &quot;failed&quot;
+        },
+        {
+          &quot;field&quot;: &quot;error&quot;
+        },
+        {
+          &quot;field&quot;: &quot;skipped&quot;
+        },
+        {
+          &quot;field&quot;: &quot;other&quot;
+        }
+      ]
+    },
+    {
+      &quot;id&quot;: &quot;slowest&quot;,
+      &quot;title&quot;: &quot;Slowest cases \u2014 top 12; full inventory below&quot;,
+      &quot;question&quot;: &quot;Slowest cases \u2014 top 12; full inventory below&quot;,
+      &quot;type&quot;: &quot;bar&quot;,
+      &quot;source&quot;: {
+        &quot;path&quot;: &quot;results.json&quot;,
+        &quot;pointer&quot;: &quot;/datasets/slowest&quot;
+      },
+      &quot;unit&quot;: &quot;s&quot;,
+      &quot;limitations&quot;: &quot;Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.&quot;,
+      &quot;x&quot;: &quot;test&quot;,
+      &quot;y&quot;: &quot;seconds&quot;
+    },
+    {
+      &quot;id&quot;: &quot;duration-distribution&quot;,
+      &quot;title&quot;: &quot;Distribution of observed case durations&quot;,
+      &quot;question&quot;: &quot;Distribution of observed case durations&quot;,
+      &quot;type&quot;: &quot;histogram&quot;,
+      &quot;source&quot;: {
+        &quot;path&quot;: &quot;results.json&quot;,
+        &quot;pointer&quot;: &quot;/datasets/duration-distribution&quot;
+      },
+      &quot;unit&quot;: &quot;s&quot;,
+      &quot;limitations&quot;: &quot;Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.&quot;,
+      &quot;value&quot;: &quot;seconds&quot;
+    },
+    {
+      &quot;id&quot;: &quot;duration-ecdf&quot;,
+      &quot;title&quot;: &quot;Fraction of cases completed within each duration&quot;,
+      &quot;question&quot;: &quot;Fraction of cases completed within each duration&quot;,
+      &quot;type&quot;: &quot;ecdf&quot;,
+      &quot;source&quot;: {
+        &quot;path&quot;: &quot;results.json&quot;,
+        &quot;pointer&quot;: &quot;/datasets/duration-ecdf&quot;
+      },
+      &quot;unit&quot;: &quot;s&quot;,
+      &quot;limitations&quot;: &quot;Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.&quot;,
+      &quot;value&quot;: &quot;seconds&quot;
+    },
+    {
+      &quot;id&quot;: &quot;suite-spread&quot;,
+      &quot;title&quot;: &quot;Duration spread across cases within each suite&quot;,
+      &quot;question&quot;: &quot;Duration spread across cases within each suite&quot;,
+      &quot;type&quot;: &quot;box&quot;,
+      &quot;source&quot;: {
+        &quot;path&quot;: &quot;results.json&quot;,
+        &quot;pointer&quot;: &quot;/datasets/suite-spread&quot;
+      },
+      &quot;unit&quot;: &quot;s&quot;,
+      &quot;limitations&quot;: &quot;Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.&quot;,
+      &quot;x&quot;: &quot;suite&quot;,
+      &quot;y&quot;: &quot;seconds&quot;
+    },
+    {
+      &quot;id&quot;: &quot;stage-time&quot;,
+      &quot;title&quot;: &quot;Observed time by lifecycle stage&quot;,
+      &quot;question&quot;: &quot;Observed time by lifecycle stage&quot;,
+      &quot;type&quot;: &quot;bar&quot;,
+      &quot;source&quot;: {
+        &quot;path&quot;: &quot;results.json&quot;,
+        &quot;pointer&quot;: &quot;/datasets/stage-time&quot;
+      },
+      &quot;unit&quot;: &quot;s&quot;,
+      &quot;limitations&quot;: &quot;Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.&quot;,
+      &quot;x&quot;: &quot;stage&quot;,
+      &quot;y&quot;: &quot;seconds&quot;
+    },
+    {
+      &quot;id&quot;: &quot;failure-stages&quot;,
+      &quot;title&quot;: &quot;Failure events by observed stage (including unknown)&quot;,
+      &quot;question&quot;: &quot;Failure events by observed stage (including unknown)&quot;,
+      &quot;type&quot;: &quot;bar&quot;,
+      &quot;source&quot;: {
+        &quot;path&quot;: &quot;results.json&quot;,
+        &quot;pointer&quot;: &quot;/datasets/failure-stages&quot;
+      },
+      &quot;unit&quot;: &quot;failure events&quot;,
+      &quot;limitations&quot;: &quot;Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.&quot;,
+      &quot;x&quot;: &quot;stage&quot;,
+      &quot;y&quot;: &quot;events&quot;,
+      &quot;color&quot;: &quot;#b04e54&quot;
+    },
+    {
+      &quot;id&quot;: &quot;failure-map&quot;,
+      &quot;title&quot;: &quot;Failure events by suite and stage&quot;,
+      &quot;question&quot;: &quot;Failure events by suite and stage&quot;,
+      &quot;type&quot;: &quot;heatmap&quot;,
+      &quot;source&quot;: {
+        &quot;path&quot;: &quot;results.json&quot;,
+        &quot;pointer&quot;: &quot;/datasets/failure-map&quot;
+      },
+      &quot;unit&quot;: &quot;failure events&quot;,
+      &quot;limitations&quot;: &quot;Observed test records only. Fixture/discovery records are identified separately. Timing is not a performance benchmark.&quot;,
+      &quot;x&quot;: &quot;stage&quot;,
+      &quot;y&quot;: &quot;suite&quot;,
+      &quot;value&quot;: &quot;failures&quot;
+    }
+  ],
+  &quot;dimensions&quot;: [
+    {
+      &quot;dimension&quot;: &quot;Case outcomes&quot;,
+      &quot;available&quot;: true,
+      &quot;reason&quot;: &quot;Case-level records collected.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Duration and distribution&quot;,
+      &quot;available&quot;: true,
+      &quot;reason&quot;: &quot;6 non-skipped cases have usable durations. Skipped cases are excluded; unknown durations are not replaced with zero.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Lifecycle timing&quot;,
+      &quot;available&quot;: true,
+      &quot;reason&quot;: &quot;Native instrumentation observed lifecycle calls.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Failure locations&quot;,
+      &quot;available&quot;: true,
+      &quot;reason&quot;: &quot;Observed failure events; unknown stage remains explicit.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;History trends&quot;,
+      &quot;available&quot;: false,
+      &quot;reason&quot;: &quot;1 comparable runs. Historical source paths and checksums are retained.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Flaky candidates&quot;,
+      &quot;available&quot;: false,
+      &quot;reason&quot;: &quot;No repeated eligible case ID in a matching context; one run cannot establish instability.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Statement coverage&quot;,
+      &quot;available&quot;: false,
+      &quot;reason&quot;: &quot;No coverage file supplied. Passing tests do not imply covered statements.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Branch coverage&quot;,
+      &quot;available&quot;: false,
+      &quot;reason&quot;: &quot;Branch coverage was not supplied; statement coverage does not establish it.&quot;
+    }
+  ]
+}
+</pre></details></main></body></html>

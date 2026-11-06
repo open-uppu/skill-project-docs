@@ -23,7 +23,7 @@ Read this when a phase needs measured evidence or a custom visual. Use `template
 | When is work planned? | `schedule` → `timeline` | category `x`, `start_field`, `end_field` | Supplied numbers or ISO dates; no inferred dependencies |
 | Which categories contribute most? | `concentration` → `pareto` | category `x`, nonnegative `y` | Descending bars and separately labelled cumulative share |
 
-All 16 families have deterministic native SVG renderers. See [the English gallery](../examples/chart-gallery/gallery.html) and its [reproducible specs](../examples/chart-gallery/chart-specs.json). Use a project-owned custom SVG when the question needs another encoding. Pie/donut, radar, gauges, 3D and decorative animation are not defaults. More available chart types does not justify filling missing dimensions with invented data.
+All 16 families have deterministic native HTML/CSS renderers. See [the English gallery](../examples/chart-gallery/gallery.html) and its [reproducible specs](../examples/chart-gallery/chart-specs.json). Use a project-owned custom HTML when the question needs another encoding. Pie/donut, radar, gauges, 3D and decorative animation are not defaults. More available chart types does not justify filling missing dimensions with invented data.
 
 ## One source, two outputs
 
@@ -72,7 +72,7 @@ python3 /path/to/skill/scripts/sync_presentation.py --all
 python3 /path/to/skill/scripts/sync_presentation.py --all --check
 ```
 
-Sync updates `tasks.md` AUTO flow/chart blocks, `presentation.html` AUTO blocks and inline SVGs, `phase-flow.svg`, and chart SVG assets. It leaves manual narrative intact. Both formats include chart rationale, source path/pointer/checksum, limitations, and source-value tables (first 100 rows, with the full JSON linked). The HTML stays usable offline, without a CDN chart library; Markdown shows SVG plus textual status and data tables. On small screens the flow uses a readable step list and charts scroll **inside** their container.
+Sync updates `tasks.md` AUTO flow/chart blocks, `presentation.html` AUTO blocks and inline HTML charts, `phase-flow.html`, and chart HTML assets. It leaves manual narrative intact. Both formats include chart rationale, source path/pointer/checksum, limitations, and source-value tables (first 100 rows, with the full JSON linked). The HTML stays usable offline, without a CDN chart library; Markdown links HTML assets and shows textual status and data tables. On small screens the flow uses a readable step list and charts scroll **inside** their container.
 
 No chart spec means an explicit no-results state, not invented measurements. Hand edits to generated assets, changed source files, stale custom generators and mismatched MD/HTML are rejected by `--check` and the docs gate. Native renderers reject missing/NaN/infinite values and booleans instead of substituting zero. They reject ambiguous duplicate categories/cells and unordered line data. Large category sets need an explicit aggregation or a custom view, never silent truncation.
 
@@ -82,18 +82,16 @@ For multi-hop breakdowns, baseline normalization, cumulative thresholds or Local
 
 ## Custom charts that fit the work
 
-Start from `templates/paired-chart-example.py` for a paired comparison; adapt the generator to the actual reader question. A custom spec uses `type: custom`, `asset`, `generator`, `reason`, `fields` and the same `source`, `question`, `unit`, `limitations` contract. Both the SVG and generator must exist in the project. Generators are **not executed automatically** from a JSON spec; review and run the project-owned generator explicitly.
+Start from `templates/paired-chart-example.py`; adapt it to the reader question. A custom spec uses `type: custom`, `asset`, `generator`, `reason`, `fields` and the same `source`, `question`, `unit`, `limitations` contract. Both the HTML asset and generator must exist. Review and run the generator explicitly; sync never executes project scripts from a spec.
 
-The source SVG must have a viewBox, accessible title, and these metadata elements:
+The standalone UTF-8 HTML document must contain these metadata elements in its head:
 
-```xml
-<metadata id="project-docs-source-sha256">SHA256_OF_WHOLE_SOURCE_JSON</metadata>
-<metadata id="project-docs-generator-sha256">SHA256_OF_GENERATOR_FILE</metadata>
+```html
+<meta name="project-docs-source-sha256" content="SHA256_OF_WHOLE_SOURCE_JSON">
+<meta name="project-docs-generator-sha256" content="SHA256_OF_GENERATOR_FILE">
 ```
 
-The paired example writes them automatically. A data or generator change requires regeneration before sync. Embedded copies namespace IDs and remove internal build metadata; the caption retains source provenance. Use static SVG primitives and presentation attributes; scripts, style tags/attributes, external resources, entities, images, use references and animations are rejected. Flatten unsupported SVG constructs when exporting from another plotting tool. Checksums establish build freshness, not the truth of an author's interpretation: inspect the encoding against the source table.
-
-For distributions and uncertainty, use established plotting tools when appropriate, then produce a compatible static SVG. Do not make a custom chart merely to decorate a single number. A table or a clearly labelled statement is often better for very small datasets.
+The paired example writes them automatically. After data or generator changes, regenerate before sync. Use inline styles within the chart body, semantic HTML and CSS; scripts, SVG, images, external resources and active content are rejected. The chart must have an accessible label. Checksums establish build freshness, not correctness: inspect the visual against its source table. Keep existing project assets until the owner decides how to migrate them; do not silently delete historical files.
 
 ## Readability, scale and failure states
 

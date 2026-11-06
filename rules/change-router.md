@@ -80,7 +80,7 @@ Route by the data that changed (A or B), then check the pair together. Never lea
 
 ## H. Diagram or chart
 
-1. If the project has a spec in `.project-docs/diagrams/`, edit the spec; otherwise find the generator in owner-map and edit the script. Never hand-edit `.excalidraw` or `.svg`. A new diagram is a new block in the existing file (`rules/writing.md` → Diagrams before prose; spec workflow in `rules/diagrams.md`).
+1. If the project has a spec in `.project-docs/diagrams/`, edit the spec; otherwise find the generator in owner-map and edit the script. Never hand-edit `.excalidraw` or generated `.html`. A new diagram is a new block in the existing file (`rules/writing.md` → Diagrams before prose; spec workflow in `rules/diagrams.md`).
 2. Spec: run `python3 ~/.agents/skills/project-docs/scripts/build_diagram.py <spec> --check`, fix every ERROR, then run it without `--check` to write. Generator: rerun the script from the repo root. Delete any `Untitled-*.excalidraw` autosave copy the editor left behind.
 3. Check the "Diagrams before prose" rules in `rules/writing.md` and the project's diagram conventions in `.project-docs/rules.md` (column order, step labels), glossary names, symmetric boxes.
 4. Open the file by eye (excalidraw.com or the VS Code extension); if you can't, say it wasn't looked at.

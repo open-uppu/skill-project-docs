@@ -6,8 +6,7 @@
   python3 qa_presentation.py 2 --shots DIR     # also save full-page screenshots to DIR (outside the repo)
 
 Checks per viewport: no page-level horizontal overflow, no raw backtick in visible text,
-status pill count equals the task count in phase-N/tasks.md, Mermaid blocks rendered or
-fell back to source. Tables that scroll inside their own overflow container are reported,
+status pill count equals the task count in phase-N/tasks.md, and no SVG is present. Tables that scroll inside their own overflow container are reported,
 not failed. Exit 1 on any FAIL, 2 when Playwright is missing.
 
 Needs Playwright for Python (`pip install playwright`, then `playwright install chromium`,
@@ -36,11 +35,12 @@ PROBE = """() => {
     rawBacktick: document.body.innerText.includes('`'),
     pills: document.querySelectorAll('.pill.done, .pill.doing, .pill.block, .pill.todo').length,
     scrollingTables: [...document.querySelectorAll('.tbl, .table-wrap')].filter(t => t.scrollWidth > t.clientWidth).length,
+    svgElements: document.querySelectorAll('svg, img[src*=".svg" i], img[src^="data:image/svg" i], object[data*=".svg" i], embed[src*=".svg" i]').length,
     diagrams: diagrams.length,
-    diagramsEmpty: diagrams.filter(d => !d.querySelector('svg, pre')).length,
+    diagramsEmpty: diagrams.filter(d => !d.querySelector('[role=img], pre')).length,
     flowTasks: document.querySelector('.phase-progress')?.dataset.tasks ?? null,
     chartsMissingSource: [...document.querySelectorAll('.evidence-chart')].filter(c => !c.dataset.sourceSha256 || !c.querySelector('figcaption a, details table')).length,
-    chartsMissingTitle: [...document.querySelectorAll('.evidence-chart svg')].filter(s => !s.querySelector('title')).length,
+    chartsMissingTitle: [...document.querySelectorAll('.evidence-chart')].filter(c => !c.querySelector('[role=img][aria-label]')).length,
     duplicateIds: [...document.querySelectorAll('[id]')].map(e=>e.id).filter((id,i,a)=>a.indexOf(id)!==i),
   };
 }"""
@@ -95,17 +95,18 @@ def main() -> int:
                 for name, w, h in VIEWPORTS:
                     page = browser.new_page(viewport={"width": w, "height": h})
                     page.goto(url, wait_until="load")
-                    page.wait_for_timeout(800)  # let Mermaid render
+                    page.wait_for_timeout(800)  # allow asynchronous content to appear
                     r = page.evaluate(PROBE)
                     problems = []
                     if r["pageOverflow"]: problems.append("page scrolls horizontally")
                     if r["rawBacktick"]: problems.append("raw backtick visible")
                     if tasks is not None and r["pills"] != tasks: problems.append(f"{r['pills']} status pills but {tasks} tasks in TASKS")
-                    if r["diagramsEmpty"]: problems.append(f"{r['diagramsEmpty']} Mermaid block(s) rendered nothing")
+                    if r["diagramsEmpty"]: problems.append(f"{r['diagramsEmpty']} diagram block(s) rendered nothing")
+                    if r["svgElements"]: problems.append("SVG is prohibited")
                     if r["flowTasks"] is not None and int(r["flowTasks"]) != tasks: problems.append("phase flow task count differs from TASKS")
                     if r["chartsMissingSource"]: problems.append("chart lacks source/provenance or data table")
                     if r["chartsMissingTitle"]: problems.append("chart lacks accessible title")
-                    if r["duplicateIds"]: problems.append("duplicate HTML/SVG IDs")
+                    if r["duplicateIds"]: problems.append("duplicate HTML IDs")
                     level = "FAIL" if problems else "OK"
                     fails += bool(problems)
                     note = f" · {r['scrollingTables']} table(s) scroll inside their container" if r["scrollingTables"] else ""

@@ -46,7 +46,7 @@ class VisualTests(unittest.TestCase):
         generated = visuals.outputs(self.root,1,self.items)
         self.assertIn("Copy · Verify",generated["html_flow"])
         self.assertIn("1/4",generated["md_flow"])
-        ET.fromstring(generated["assets"][self.root/"project/phases/phase-1/phase-flow.svg"])
+        self.assertNotIn("<svg",generated["assets"][self.root/"project/phases/phase-1/phase-flow.html"].lower())
 
     def test_grouped_steps_derive_status_and_counts_without_stored_status(self):
         self.configure({"flow":{"steps":[{"id":"work","label":"Work","tasks":["first","second"]},{"id":"review","label":"Review","tasks":["third","fourth"]}]}})
@@ -76,7 +76,7 @@ class VisualTests(unittest.TestCase):
             with self.subTest(intent=spec["intent"]):
                 result=charts.render(self.root,spec)
                 self.assertEqual(result["type"],charts.CHOICES[spec["intent"]])
-                ET.fromstring(result["svg"])
+                self.assertNotIn("<svg",result["html"].lower())
                 self.assertTrue(result["rows"])
                 self.assertEqual(result["sha256"],hashlib.sha256(self.source.read_bytes()).hexdigest())
 
@@ -110,19 +110,19 @@ class VisualTests(unittest.TestCase):
         generator=self.root/"generator.py";generator.write_text("# immutable fixture generator\n")
         checksum=hashlib.sha256(self.source.read_bytes()).hexdigest()
         genhash=hashlib.sha256(generator.read_bytes()).hexdigest()
-        asset=self.root/"custom.svg"
-        asset.write_text(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><title id="label">Custom fixture</title><metadata id="project-docs-source-sha256">{checksum}</metadata><metadata id="project-docs-generator-sha256">{genhash}</metadata><circle cx="50" cy="50" r="20"/>{extra}</svg>')
-        return {**self.spec(),"type":"custom","fields":["method","value"],"asset":"custom.svg","generator":"generator.py","reason":"Preserve paired observations."}
+        asset=self.root/"custom.html"
+        asset.write_text(f'<html><head><meta name="project-docs-source-sha256" content="{checksum}"><meta name="project-docs-generator-sha256" content="{genhash}"></head><body><div>Custom fixture</div>{extra}</body></html>')
+        return {**self.spec(),"type":"custom","fields":["method","value"],"asset":"custom.html","generator":"generator.py","reason":"Preserve paired observations."}
 
-    def test_custom_svg_is_namespaced_and_source_and_generator_checked(self):
+    def test_custom_html_source_and_generator_checked(self):
         spec=self.custom();result=charts.render(self.root,spec)
-        self.assertIn('id="example-label"',result["svg"])
-        self.assertNotIn("project-docs-source-sha256",result["svg"])
+        self.assertIn('Custom fixture',result["html"])
+        self.assertNotIn("project-docs-source-sha256",result["html"])
         (self.root/"generator.py").write_text("# changed\n")
         with self.assertRaisesRegex(ValueError,"generator checksum"): charts.render(self.root,spec)
 
-    def test_custom_svg_rejects_active_content_and_stale_source(self):
-        for extra in ('<script>alert(1)</script>','<image href="https://example.test/image.png"/>','<circle onload="alert(1)"/>'):
+    def test_custom_html_rejects_active_content_and_stale_source(self):
+        for extra in ('<script>alert(1)</script>','<img src="https://example.test/image.png"/>','<div onload="alert(1)"></div>'):
             spec=self.custom(extra)
             with self.assertRaises(ValueError): charts.render(self.root,spec)
         spec=self.custom();self.source.write_text(self.source.read_text()+" ")
@@ -131,7 +131,7 @@ class VisualTests(unittest.TestCase):
     def test_labels_are_escaped_and_table_retains_original_values(self):
         self.data["bars"][0]["method"]='<script>example</script>';self.source.write_text(json.dumps(self.data))
         chart=charts.render(self.root,self.spec())
-        self.assertNotIn('<script>',chart["svg"])
+        self.assertNotIn('<script>',chart["html"])
         self.assertEqual(chart["rows"][0],["<script>example</script>",10])
 
 
@@ -151,7 +151,7 @@ class SyncTests(unittest.TestCase):
         result=self.run_script("1","--new");self.assertEqual(result.returncode,0,result.stdout+result.stderr)
         self.assertIn("AUTO:phase-flow",self.tasks.read_text())
         self.assertLess(self.tasks.read_text().index("AUTO:phase-flow"),self.tasks.read_text().index("### [x]"))
-        self.assertTrue((self.phase/"phase-flow.svg").is_file())
+        self.assertTrue((self.phase/"phase-flow.html").is_file())
         before={p:(p.read_bytes(),p.stat().st_mtime_ns) for p in self.root.rglob('*') if p.is_file()}
         self.assertEqual(self.run_script("1","--check").returncode,0)
         self.assertEqual(before,{p:(p.read_bytes(),p.stat().st_mtime_ns) for p in before})
@@ -179,9 +179,9 @@ class SyncTests(unittest.TestCase):
         for n in range(6):self.assertIn(f'KEEP narrative {n}',output)
         self.assertEqual(self.run_script("1","--check").returncode,0)
 
-    def test_generated_svg_hand_edit_is_detected(self):
+    def test_generated_html_hand_edit_is_detected(self):
         self.assertEqual(self.run_script("1","--new").returncode,0)
-        path=self.phase/"phase-flow.svg";path.write_text(path.read_text().replace('First','Hand edited'))
+        path=self.phase/"phase-flow.html";path.write_text(path.read_text().replace('First','Hand edited'))
         self.assertEqual(self.run_script("1","--check").returncode,1)
 
     def test_new_and_check_cannot_write_a_presentation(self):

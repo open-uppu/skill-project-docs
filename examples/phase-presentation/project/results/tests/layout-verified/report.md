@@ -27,7 +27,7 @@ passed / (passed + failed + error + unexpected_success) test cases; skipped and 
 
 ## Test and fixture outcomes
 
-![Test and fixture outcomes](charts/outcomes.svg)
+[View Test and fixture outcomes](charts/outcomes.html)
 
 **Why:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -47,7 +47,7 @@ Source: [results.json](results.json) · `/datasets/outcomes`
 
 ## Outcomes by suite (minor suites explicitly grouped)
 
-![Outcomes by suite (minor suites explicitly grouped)](charts/suite-outcomes.svg)
+[View Outcomes by suite (minor suites explicitly grouped)](charts/suite-outcomes.html)
 
 **Why:** Segments show absolute contributions to a total; middle segments are harder to compare across groups.
 
@@ -69,7 +69,7 @@ Source: [results.json](results.json) · `/datasets/suite-outcomes`
 
 ## Slowest cases — top 12; full inventory below
 
-![Slowest cases — top 12; full inventory below](charts/slowest.svg)
+[View Slowest cases — top 12; full inventory below](charts/slowest.html)
 
 **Why:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -94,7 +94,7 @@ Source: [results.json](results.json) · `/datasets/slowest`
 
 ## Distribution of observed case durations
 
-![Distribution of observed case durations](charts/duration-distribution.svg)
+[View Distribution of observed case durations](charts/duration-distribution.html)
 
 **Why:** Explicit bins show the distribution of raw observations; bin choice affects the apparent shape.
 
@@ -204,7 +204,7 @@ Source: [results.json](results.json) · `/datasets/duration-distribution`
 
 ## Fraction of cases completed within each duration
 
-![Fraction of cases completed within each duration](charts/duration-ecdf.svg)
+[View Fraction of cases completed within each duration](charts/duration-ecdf.html)
 
 **Why:** The empirical cumulative distribution shows the observed fraction at or below each value without selecting histogram bins.
 
@@ -314,7 +314,7 @@ Source: [results.json](results.json) · `/datasets/duration-ecdf`
 
 ## Duration spread across cases within each suite
 
-![Duration spread across cases within each suite](charts/suite-spread.svg)
+[View Duration spread across cases within each suite](charts/suite-spread.html)
 
 **Why:** Boxes summarize raw sample distributions using linear-interpolated quartiles and Tukey 1.5-IQR whiskers; dots show outliers, not confidence intervals.
 
@@ -424,7 +424,7 @@ Source: [results.json](results.json) · `/datasets/suite-spread`
 
 ## Observed time by lifecycle stage
 
-![Observed time by lifecycle stage](charts/stage-time.svg)
+[View Observed time by lifecycle stage](charts/stage-time.html)
 
 **Why:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 

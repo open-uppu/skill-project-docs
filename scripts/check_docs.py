@@ -289,7 +289,7 @@ def check_human_pages(policy: dict) -> None:
 
 def _covers(rel: str, pattern: str) -> bool:
     """True when a path in owner-map.md refers to this file. `N` and `*` stand for a phase number."""
-    if "/" not in pattern or not pattern.endswith((".md", ".html", ".svg", ".json")):
+    if "/" not in pattern or not pattern.endswith((".md", ".html", ".json")):
         return False
     if pattern.startswith(("docs/**", "docs/*", "**/")):
         return False   # a catch-all, not a specific owner row
@@ -493,6 +493,9 @@ def run(phases: list[int] | None = None) -> list[tuple[str, str, str]]:
                      *(REPO / "memory-bank").glob("*.md")]):
         if f.is_file():
             check_links(f)
+            from svg_policy import uses_svg
+            if uses_svg(f.read_text(encoding="utf-8", errors="replace"), markdown=f.suffix.lower() == ".md"):
+                add("ERROR", rel(f), "SVG is prohibited; replace the visual with HTML/CSS.")
     check_test_results()
     check_skills()
     check_page_role()

@@ -15,28 +15,19 @@ passed / (passed + failed + error + unexpected_success) test cases; skipped and 
 ## Available dimensions
 
 | Dimension | Available | Meaning |
-
 |---|---|---|
-
-| Case outcomes | True | Case-level records collected. |
-
-| Duration and distribution | True | 6 non-skipped cases have usable durations. Skipped cases are excluded; unknown durations are not replaced with zero. |
-
-| Lifecycle timing | True | Native instrumentation observed lifecycle calls. |
-
-| Failure locations | True | Observed failure events; unknown stage remains explicit. |
-
-| History trends | False | 1 comparable runs. Historical source paths and checksums are retained. |
-
-| Flaky candidates | False | No repeated eligible case ID in a matching context; one run cannot establish instability. |
-
-| Statement coverage | False | No coverage file supplied. Passing tests do not imply covered statements. |
-
-| Branch coverage | False | Branch coverage was not supplied; statement coverage does not establish it. |
+| Case outcomes | Available | Case-level records collected. |
+| Duration and distribution | Available | 6 non-skipped cases have usable durations. Skipped cases are excluded; unknown durations are not replaced with zero. |
+| Lifecycle timing | Available | Native instrumentation observed lifecycle calls. |
+| Failure locations | Available | Observed failure events; unknown stage remains explicit. |
+| History trends | Not available | 1 comparable runs. Historical source paths and checksums are retained. |
+| Flaky candidates | Not available | No repeated eligible case ID in a matching context; one run cannot establish instability. |
+| Statement coverage | Not available | No coverage file supplied. Passing tests do not imply covered statements. |
+| Branch coverage | Not available | Branch coverage was not supplied; statement coverage does not establish it. |
 
 ## Test and fixture outcomes
 
-![Test and fixture outcomes](charts/outcomes.svg)
+[View Test and fixture outcomes](charts/outcomes.html)
 
 **Why:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -45,26 +36,18 @@ passed / (passed + failed + error + unexpected_success) test cases; skipped and 
 Source: [results.json](results.json) · `/datasets/outcomes`
 
 | outcome | count |
-
 | --- | --- |
-
 | passed | 1 |
-
 | failed | 2 |
-
 | error | 4 |
-
 | skipped | 1 |
-
 | expected_failure | 0 |
-
 | unexpected_success | 0 |
-
 | interrupted | 0 |
 
 ## Outcomes by suite (minor suites explicitly grouped)
 
-![Outcomes by suite (minor suites explicitly grouped)](charts/suite-outcomes.svg)
+[View Outcomes by suite (minor suites explicitly grouped)](charts/suite-outcomes.html)
 
 **Why:** Segments show absolute contributions to a total; middle segments are harder to compare across groups.
 
@@ -73,28 +56,19 @@ Source: [results.json](results.json) · `/datasets/outcomes`
 Source: [results.json](results.json) · `/datasets/suite-outcomes`
 
 | suite | passed | failed | error | skipped | other |
-
 | --- | --- | --- | --- | --- | --- |
-
 | fixture_cases.AssertionExample | 0 | 1 | 0 | 0 | 0 |
-
 | fixture_cases.CleanupExample | 0 | 0 | 1 | 0 | 0 |
-
 | setUpClass (fixture_cases | 0 | 0 | 1 | 0 | 0 |
-
 | fixture_cases.PassingExample | 1 | 0 | 0 | 0 | 0 |
-
 | fixture_cases.SetupExample | 0 | 0 | 1 | 0 | 0 |
-
 | fixture_cases.SkippedExample | 0 | 0 | 0 | 1 | 0 |
-
 | fixture_cases.SubtestExample | 0 | 1 | 0 | 0 | 0 |
-
 | fixture_cases.TeardownExample | 0 | 0 | 1 | 0 | 0 |
 
 ## Slowest cases — top 12; full inventory below
 
-![Slowest cases — top 12; full inventory below](charts/slowest.svg)
+[View Slowest cases — top 12; full inventory below](charts/slowest.html)
 
 **Why:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -103,24 +77,17 @@ Source: [results.json](results.json) · `/datasets/suite-outcomes`
 Source: [results.json](results.json) · `/datasets/slowest`
 
 | test | seconds |
-
 | --- | --- |
-
 | 1. fixture_cases.AssertionExample.test_expected_mismatch | 0.0009046669999999979 |
-
 | 2. fixture_cases.CleanupExample.test_cleanup_is_observed | 8.249999999999924e-05 |
-
 | 3. fixture_cases.SubtestExample.test_subtests | 7.087499999999802e-05 |
-
 | 4. fixture_cases.SetupExample.test_not_reached | 6.845899999999988e-05 |
-
 | 5. fixture_cases.TeardownExample.test_body_passes | 6.845899999999988e-05 |
-
 | 6. fixture_cases.PassingExample.test_valid_result | 1.5292000000000083e-05 |
 
 ## Distribution of observed case durations
 
-![Distribution of observed case durations](charts/duration-distribution.svg)
+[View Distribution of observed case durations](charts/duration-distribution.html)
 
 **Why:** Explicit bins show the distribution of raw observations; bin choice affects the apparent shape.
 
@@ -129,24 +96,17 @@ Source: [results.json](results.json) · `/datasets/slowest`
 Source: [results.json](results.json) · `/datasets/duration-distribution`
 
 | seconds |
-
 | --- |
-
 | 0.0009046669999999979 |
-
 | 8.249999999999924e-05 |
-
 | 1.5292000000000083e-05 |
-
 | 6.845899999999988e-05 |
-
 | 7.087499999999802e-05 |
-
 | 6.845899999999988e-05 |
 
 ## Fraction of cases completed within each duration
 
-![Fraction of cases completed within each duration](charts/duration-ecdf.svg)
+[View Fraction of cases completed within each duration](charts/duration-ecdf.html)
 
 **Why:** The empirical cumulative distribution shows the observed fraction at or below each value without selecting histogram bins.
 
@@ -155,24 +115,17 @@ Source: [results.json](results.json) · `/datasets/duration-distribution`
 Source: [results.json](results.json) · `/datasets/duration-ecdf`
 
 | seconds |
-
 | --- |
-
 | 0.0009046669999999979 |
-
 | 8.249999999999924e-05 |
-
 | 1.5292000000000083e-05 |
-
 | 6.845899999999988e-05 |
-
 | 7.087499999999802e-05 |
-
 | 6.845899999999988e-05 |
 
 ## Duration spread across cases within each suite
 
-![Duration spread across cases within each suite](charts/suite-spread.svg)
+[View Duration spread across cases within each suite](charts/suite-spread.html)
 
 **Why:** Boxes summarize raw sample distributions using linear-interpolated quartiles and Tukey 1.5-IQR whiskers; dots show outliers, not confidence intervals.
 
@@ -181,24 +134,17 @@ Source: [results.json](results.json) · `/datasets/duration-ecdf`
 Source: [results.json](results.json) · `/datasets/suite-spread`
 
 | suite | seconds |
-
 | --- | --- |
-
 | fixture_cases.AssertionExample | 0.0009046669999999979 |
-
 | fixture_cases.CleanupExample | 8.249999999999924e-05 |
-
 | fixture_cases.PassingExample | 1.5292000000000083e-05 |
-
 | fixture_cases.SetupExample | 6.845899999999988e-05 |
-
 | fixture_cases.SubtestExample | 7.087499999999802e-05 |
-
 | fixture_cases.TeardownExample | 6.845899999999988e-05 |
 
 ## Observed time by lifecycle stage
 
-![Observed time by lifecycle stage](charts/stage-time.svg)
+[View Observed time by lifecycle stage](charts/stage-time.html)
 
 **Why:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -207,20 +153,15 @@ Source: [results.json](results.json) · `/datasets/suite-spread`
 Source: [results.json](results.json) · `/datasets/stage-time`
 
 | stage | seconds |
-
 | --- | --- |
-
 | setup | 6.707000000001628e-06 |
-
 | test | 2.258199999999322e-05 |
-
 | teardown | 2.500999999988096e-06 |
-
 | cleanup | 1.5000000000015001e-06 |
 
 ## Failure events by observed stage (including unknown)
 
-![Failure events by observed stage (including unknown)](charts/failure-stages.svg)
+[View Failure events by observed stage (including unknown)](charts/failure-stages.html)
 
 **Why:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -229,22 +170,16 @@ Source: [results.json](results.json) · `/datasets/stage-time`
 Source: [results.json](results.json) · `/datasets/failure-stages`
 
 | stage | events |
-
 | --- | --- |
-
 | test | 2 |
-
 | cleanup | 1 |
-
 | fixture_setup | 1 |
-
 | setup | 1 |
-
 | teardown | 1 |
 
 ## Failure events by suite and stage
 
-![Failure events by suite and stage](charts/failure-map.svg)
+[View Failure events by suite and stage](charts/failure-map.html)
 
 **Why:** Cell color reveals patterns across two categories; use the values and table for exact comparisons.
 
@@ -253,67 +188,36 @@ Source: [results.json](results.json) · `/datasets/failure-stages`
 Source: [results.json](results.json) · `/datasets/failure-map`
 
 | stage | suite | failures |
-
 | --- | --- | --- |
-
 | test | fixture_cases.AssertionExample | 1 |
-
 | cleanup | fixture_cases.AssertionExample | 0 |
-
 | fixture_setup | fixture_cases.AssertionExample | 0 |
-
 | setup | fixture_cases.AssertionExample | 0 |
-
 | teardown | fixture_cases.AssertionExample | 0 |
-
 | test | fixture_cases.CleanupExample | 0 |
-
 | cleanup | fixture_cases.CleanupExample | 1 |
-
 | fixture_setup | fixture_cases.CleanupExample | 0 |
-
 | setup | fixture_cases.CleanupExample | 0 |
-
 | teardown | fixture_cases.CleanupExample | 0 |
-
 | test | setUpClass (fixture_cases | 0 |
-
 | cleanup | setUpClass (fixture_cases | 0 |
-
 | fixture_setup | setUpClass (fixture_cases | 1 |
-
 | setup | setUpClass (fixture_cases | 0 |
-
 | teardown | setUpClass (fixture_cases | 0 |
-
 | test | fixture_cases.SetupExample | 0 |
-
 | cleanup | fixture_cases.SetupExample | 0 |
-
 | fixture_setup | fixture_cases.SetupExample | 0 |
-
 | setup | fixture_cases.SetupExample | 1 |
-
 | teardown | fixture_cases.SetupExample | 0 |
-
 | test | fixture_cases.SubtestExample | 1 |
-
 | cleanup | fixture_cases.SubtestExample | 0 |
-
 | fixture_setup | fixture_cases.SubtestExample | 0 |
-
 | setup | fixture_cases.SubtestExample | 0 |
-
 | teardown | fixture_cases.SubtestExample | 0 |
-
 | test | fixture_cases.TeardownExample | 0 |
-
 | cleanup | fixture_cases.TeardownExample | 0 |
-
 | fixture_setup | fixture_cases.TeardownExample | 0 |
-
 | setup | fixture_cases.TeardownExample | 0 |
-
 | teardown | fixture_cases.TeardownExample | 1 |
 
 ## Failure workflows
@@ -322,27 +226,66 @@ First 20 failed-record workflows; all records and tracebacks remain below.
 
 ### fixture_cases.AssertionExample.test_expected_mismatch
 
-![Observed failure lifecycle](workflows/failure-0-1d1f7848.svg)
+[Observed failure lifecycle](workflows/failure-0-1d1f7848.html)
+
+| Stage | Observed status | Duration |
+|---|---|---|
+| Setup | passed | 8.75e-07 s |
+| Test body / assertion | failed | 4.666e-06 s |
+| Teardown | passed | 4.59e-07 s |
+| Cleanup | not observed | Unknown |
 
 ### fixture_cases.CleanupExample.test_cleanup_is_observed
 
-![Observed failure lifecycle](workflows/failure-1-b977de6d.svg)
+[Observed failure lifecycle](workflows/failure-1-b977de6d.html)
+
+| Stage | Observed status | Duration |
+|---|---|---|
+| Setup | passed | 1.083e-06 s |
+| Test body | passed | 1.25e-06 s |
+| Teardown | passed | 3.75e-07 s |
+| Cleanup | failed | 1.5e-06 s |
 
 ### setUpClass (fixture_cases.FixtureExample)
 
-![Observed failure lifecycle](workflows/failure-2-e506c9a4.svg)
+[Observed failure lifecycle](workflows/failure-2-e506c9a4.html)
+
+| Stage | Observed status | Duration |
+|---|---|---|
+| Class/module setup | error | Unknown |
 
 ### fixture_cases.SetupExample.test_not_reached
 
-![Observed failure lifecycle](workflows/failure-3-dac21de0.svg)
+[Observed failure lifecycle](workflows/failure-3-dac21de0.html)
+
+| Stage | Observed status | Duration |
+|---|---|---|
+| Setup | failed | 1.375e-06 s |
+| Test body | not observed | Unknown |
+| Teardown | not observed | Unknown |
+| Cleanup | not observed | Unknown |
 
 ### fixture_cases.SubtestExample.test_subtests
 
-![Observed failure lifecycle](workflows/failure-4-c3def80d.svg)
+[Observed failure lifecycle](workflows/failure-4-c3def80d.html)
+
+| Stage | Observed status | Duration |
+|---|---|---|
+| Setup | passed | 1.833e-06 s |
+| Test body / assertion | passed | 1.421e-05 s |
+| Teardown | passed | 3.75e-07 s |
+| Cleanup | not observed | Unknown |
 
 ### fixture_cases.TeardownExample.test_body_passes
 
-![Observed failure lifecycle](workflows/failure-5-58d7251b.svg)
+[Observed failure lifecycle](workflows/failure-5-58d7251b.html)
+
+| Stage | Observed status | Duration |
+|---|---|---|
+| Setup | passed | 6.66e-07 s |
+| Test body | passed | 7.5e-07 s |
+| Teardown | failed | 8.75e-07 s |
+| Cleanup | not observed | Unknown |
 
 ## Full inventory and tracebacks
 

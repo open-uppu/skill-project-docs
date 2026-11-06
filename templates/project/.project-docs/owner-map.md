@@ -7,9 +7,9 @@ Rule: edit only the **owner**. Other files link to it or pull from it; never ret
 | Plan-topic inventory and title aliases | `.project-docs/task-topics.json`, reviewed against the actual source plan | Task title/category/source metadata and hierarchy reports; `task_naming.py --require` checks structure, not semantic interpretation |
 | Task status and checklists | `project/phases/phase-N/tasks.md` | `project/README.md` (AUTO block), presentation (AUTO block), roadmap, memory-bank |
 | Phase step grouping and chart encoding | `.project-docs/presentations/phase-N.json` (optional) | MD/HTML AUTO flow/chart blocks; states still come from Task headers, measurements from source JSON |
-| Phase flow and chart SVGs | Task headers + presentation spec + referenced JSON; custom charts also name a project-owned generator | `phase-flow.svg`, generated chart SVGs and inline HTML; never hand-edit derived assets |
+| Phase flow and HTML charts | Task headers + presentation spec + referenced JSON; custom charts also name a project-owned generator | `phase-flow.html`, generated chart HTML and inline HTML; never hand-edit derived assets |
 | Result-section visual coverage | `.project-docs/report-visuals.json`, reviewed against raw source owners | Matching report/phase figures with source/asset/generator hashes; `report_visuals.py --require` checks completeness/freshness, not statistical interpretation |
-| Test execution and coverage evidence | `project/results/tests/<run>/results.json`, producer logs/JUnit/coverage inputs with provenance | Paired report.md/report.html, chart and workflow SVGs; never hand-edit derived values |
+| Test execution and coverage evidence | `project/results/tests/<run>/results.json`, producer logs/JUnit/coverage inputs with provenance | Paired report.md/report.html, HTML charts and workflows; never hand-edit derived values |
 | Latest test run shown in a phase | `test_run` in `.project-docs/presentations/phase-N.json` | MD/HTML evidence summaries; never changes Task status |
 | Phase outcome and closeout navigation | `project/phases/phase-N/deliverable.md` | `project/README.md` links to final summaries; docs index links to user pages; status/evidence remain at their existing owners |
 | Project-wide status | `project/roadmap.md` (paired `.html`) | `memory-bank/progress.md` |

@@ -6,8 +6,8 @@ Rule: edit only the **owner**. Other files link to it or pull from it; never ret
 |---|---|---|
 | Task status and checklists | `project/phases/phase-N/tasks.md` | `project/README.md` (AUTO block), presentation (AUTO block), roadmap, memory-bank |
 | Phase step grouping and chart encoding | `.project-docs/presentations/phase-N.json` (optional) | MD/HTML AUTO flow/chart blocks; states still come from Task headers, measurements from source JSON |
-| Phase flow and chart SVGs | Task headers + presentation spec + referenced JSON; custom charts also name a project-owned generator | `phase-flow.svg`, generated chart SVGs and inline HTML; never hand-edit derived assets |
-| Test execution and coverage evidence | `project/results/tests/<run>/results.json`, producer logs/JUnit/coverage inputs with provenance | Paired report.md/report.html, chart and workflow SVGs; never hand-edit derived values |
+| Phase flow and HTML charts | Task headers + presentation spec + referenced JSON; custom charts also name a project-owned generator | `phase-flow.html`, generated chart HTML and inline HTML; never hand-edit derived assets |
+| Test execution and coverage evidence | `project/results/tests/<run>/results.json`, producer logs/JUnit/coverage inputs with provenance | Paired report.md/report.html, HTML charts and workflows; never hand-edit derived values |
 | Latest test run shown in a phase | `test_run` in `.project-docs/presentations/phase-N.json` | MD/HTML evidence summaries; never changes Task status |
 | Project-wide status | `project/roadmap.md` (paired `.html`) | `memory-bank/progress.md` |
 | Problems and Issue IDs | `project/issues.md` | tasks, memory-bank (ID + one-line summary only) |

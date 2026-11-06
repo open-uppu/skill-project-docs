@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Sync phase Markdown/HTML progress flows, evidence charts and status summaries.
 
-Only AUTO blocks and generated SVGs are touched; manual narrative is preserved.
+Only AUTO blocks and generated HTML assets are touched; manual narrative is preserved.
 
   python3 sync_presentation.py 2             # update phase 2 presentation in place
   python3 sync_presentation.py 2 --check     # exit 1 if out of date, change nothing

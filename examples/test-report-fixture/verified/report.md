@@ -27,7 +27,7 @@ passed / (passed + failed + error + unexpected_success) test cases; skipped and 
 
 ## Test and fixture outcomes
 
-![Test and fixture outcomes](charts/outcomes.svg)
+[View Test and fixture outcomes](charts/outcomes.html)
 
 **Why:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -47,7 +47,7 @@ Source: [results.json](results.json) · `/datasets/outcomes`
 
 ## Outcomes by suite (minor suites explicitly grouped)
 
-![Outcomes by suite (minor suites explicitly grouped)](charts/suite-outcomes.svg)
+[View Outcomes by suite (minor suites explicitly grouped)](charts/suite-outcomes.html)
 
 **Why:** Segments show absolute contributions to a total; middle segments are harder to compare across groups.
 
@@ -68,7 +68,7 @@ Source: [results.json](results.json) · `/datasets/suite-outcomes`
 
 ## Slowest cases — top 12; full inventory below
 
-![Slowest cases — top 12; full inventory below](charts/slowest.svg)
+[View Slowest cases — top 12; full inventory below](charts/slowest.html)
 
 **Why:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -87,7 +87,7 @@ Source: [results.json](results.json) · `/datasets/slowest`
 
 ## Distribution of observed case durations
 
-![Distribution of observed case durations](charts/duration-distribution.svg)
+[View Distribution of observed case durations](charts/duration-distribution.html)
 
 **Why:** Explicit bins show the distribution of raw observations; bin choice affects the apparent shape.
 
@@ -106,7 +106,7 @@ Source: [results.json](results.json) · `/datasets/duration-distribution`
 
 ## Fraction of cases completed within each duration
 
-![Fraction of cases completed within each duration](charts/duration-ecdf.svg)
+[View Fraction of cases completed within each duration](charts/duration-ecdf.html)
 
 **Why:** The empirical cumulative distribution shows the observed fraction at or below each value without selecting histogram bins.
 
@@ -125,7 +125,7 @@ Source: [results.json](results.json) · `/datasets/duration-ecdf`
 
 ## Duration spread across cases within each suite
 
-![Duration spread across cases within each suite](charts/suite-spread.svg)
+[View Duration spread across cases within each suite](charts/suite-spread.html)
 
 **Why:** Boxes summarize raw sample distributions using linear-interpolated quartiles and Tukey 1.5-IQR whiskers; dots show outliers, not confidence intervals.
 
@@ -144,7 +144,7 @@ Source: [results.json](results.json) · `/datasets/suite-spread`
 
 ## Observed time by lifecycle stage
 
-![Observed time by lifecycle stage](charts/stage-time.svg)
+[View Observed time by lifecycle stage](charts/stage-time.html)
 
 **Why:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -161,7 +161,7 @@ Source: [results.json](results.json) · `/datasets/stage-time`
 
 ## Failure events by observed stage (including unknown)
 
-![Failure events by observed stage (including unknown)](charts/failure-stages.svg)
+[View Failure events by observed stage (including unknown)](charts/failure-stages.html)
 
 **Why:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -179,7 +179,7 @@ Source: [results.json](results.json) · `/datasets/failure-stages`
 
 ## Failure events by suite and stage
 
-![Failure events by suite and stage](charts/failure-map.svg)
+[View Failure events by suite and stage](charts/failure-map.html)
 
 **Why:** Cell color reveals patterns across two categories; use the values and table for exact comparisons.
 
@@ -226,7 +226,7 @@ First 20 failed-record workflows; all records and tracebacks remain below.
 
 ### fixture_cases.AssertionExample.test_expected_mismatch
 
-![Observed failure lifecycle](workflows/failure-0-1d1f7848.svg)
+[Observed failure lifecycle](workflows/failure-0-1d1f7848.html)
 
 | Stage | Observed status | Duration |
 |---|---|---|
@@ -237,7 +237,7 @@ First 20 failed-record workflows; all records and tracebacks remain below.
 
 ### fixture_cases.CleanupExample.test_cleanup_is_observed
 
-![Observed failure lifecycle](workflows/failure-1-b977de6d.svg)
+[Observed failure lifecycle](workflows/failure-1-b977de6d.html)
 
 | Stage | Observed status | Duration |
 |---|---|---|
@@ -248,7 +248,7 @@ First 20 failed-record workflows; all records and tracebacks remain below.
 
 ### setUpClass (fixture_cases.FixtureExample)
 
-![Observed failure lifecycle](workflows/failure-2-e506c9a4.svg)
+[Observed failure lifecycle](workflows/failure-2-e506c9a4.html)
 
 | Stage | Observed status | Duration |
 |---|---|---|
@@ -256,7 +256,7 @@ First 20 failed-record workflows; all records and tracebacks remain below.
 
 ### fixture_cases.SetupExample.test_not_reached
 
-![Observed failure lifecycle](workflows/failure-3-dac21de0.svg)
+[Observed failure lifecycle](workflows/failure-3-dac21de0.html)
 
 | Stage | Observed status | Duration |
 |---|---|---|
@@ -267,7 +267,7 @@ First 20 failed-record workflows; all records and tracebacks remain below.
 
 ### fixture_cases.SubtestExample.test_subtests
 
-![Observed failure lifecycle](workflows/failure-4-c3def80d.svg)
+[Observed failure lifecycle](workflows/failure-4-c3def80d.html)
 
 | Stage | Observed status | Duration |
 |---|---|---|
@@ -278,7 +278,7 @@ First 20 failed-record workflows; all records and tracebacks remain below.
 
 ### fixture_cases.TeardownExample.test_body_passes
 
-![Observed failure lifecycle](workflows/failure-5-58d7251b.svg)
+[Observed failure lifecycle](workflows/failure-5-58d7251b.html)
 
 | Stage | Observed status | Duration |
 |---|---|---|

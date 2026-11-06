@@ -1,6 +1,6 @@
 # Advanced analytical charts: multi-panel comparisons
 
-Read when one question needs several coordinated panels: per-step breakdowns, cumulative scaling, baseline normalization or comparisons across environments. This extends [chart selection](presentation-charts.md); it is not a new native `type`. Use native charts as separate panels where possible, or a project-owned custom SVG generator for a composite figure.
+Read when one question needs several coordinated panels: per-step breakdowns, cumulative scaling, baseline normalization or comparisons across environments. This extends [chart selection](presentation-charts.md); it is not a new native `type`. Use native charts as separate panels where possible, or a project-owned custom HTML generator for a composite figure.
 
 ## What these references teach
 
@@ -63,7 +63,7 @@ Record CPU/memory limits, architecture/emulation, network path/region, runtime v
 
 ## Compose, generate and publish
 
-Create one owner JSON and a reviewed project-owned Python generator. Prefer standard-library SVG for a small deterministic dashboard; use a suitable plotting library when statistical plotting or layout warrants it, then export compatible static SVG. Do not add a dependency merely for panel boxes. Reuse the native renderer for individual panels when its limits and semantics fit. The native `pareto` type is concentration, not Recipe A's normalized totals.
+Create one owner JSON and a reviewed project-owned Python generator. Use standard-library HTML and CSS for a small deterministic dashboard; use a suitable plotting library only if it can produce compatible self-contained HTML without SVG. Do not add a dependency merely for panel boxes. Reuse the native renderer for individual panels when its limits and semantics fit. The native `pareto` type is concentration, not Recipe A's normalized totals.
 
 A concrete project spec can use this shape (paths/fields must match actual project owners):
 
@@ -76,16 +76,16 @@ A concrete project spec can use this shape (paths/fields must match actual proje
   "source": {"path": "project/results/environment-runs.json", "pointer": "/observations"},
   "fields": ["option", "environment", "run_id", "metric", "step", "value", "unit"],
   "unit": "Per panel: ms or MiB, as recorded",
-  "asset": "project/results/charts/environment-dashboard.svg",
+  "asset": "project/results/charts/environment-dashboard.html",
   "generator": "project/results/build_environment_dashboard.py",
   "reason": "Four coordinated panels preserve option/environment identity across different measures and hop sequences.",
   "limitations": "Describe actual runs, environment differences, missing measurements and uncertainty."
 }
 ```
 
-The generator validates input before writing, derives summaries/labels from the same calculations as plotted marks, and writes an accessible title/description plus source and generator SHA-256 metadata. Follow the custom SVG contract in `presentation-charts.md`: presentation attributes, static primitives and no scripts, styles or external resources. The reviewed examples used inline styles and lacked the required provenance metadata/title; future assets must satisfy this contract rather than copy those limitations. Adding a checksum does not validate their claims or substitute for missing raw data.
+The generator validates input before writing, derives summaries/labels from the same calculations as plotted marks, and writes an accessible title/description plus source and generator SHA-256 metadata. Follow the custom HTML contract in `presentation-charts.md`: inline CSS and no SVG, scripts or external resources. The reviewed examples used inline styles and lacked the required provenance metadata/title; future assets must satisfy this contract rather than copy those limitations. Adding a checksum does not validate their claims or substitute for missing raw data.
 
-Run the generator explicitly, then `sync_presentation.py N` and `--check`. Publish the same sourced chart, rationale and full-data link in Markdown and HTML. For interactive HTML, make each panel a separate accessible figure in a responsive CSS grid; two columns only when labels remain legible, one column on narrow screens. Offer the composite SVG as an export if useful. Avoid one fixed 1200px dashboard shrunk to a phone: preserve readable panel size or reflow panels. Dense legends belong in wrapping HTML or a dedicated multiline row; reserve margins for callouts. Never position a legend/callout over axis labels or data.
+Run the generator explicitly, then `sync_presentation.py N` and `--check`. Publish the same sourced chart, rationale and full-data link in Markdown and HTML. For interactive HTML, make each panel a separate accessible figure in a responsive CSS grid; two columns only when labels remain legible, one column on narrow screens. Offer the standalone HTML as an export if useful. Avoid one fixed 1200px dashboard shrunk to a phone: preserve readable panel size or reflow panels. Dense legends belong in wrapping HTML or a dedicated multiline row; reserve margins for callouts. Never position a legend/callout over axis labels or data.
 
 ## Review gates learned from the examples
 
@@ -93,5 +93,5 @@ Run the generator explicitly, then `sync_presentation.py N` and `--check`. Publi
 - **Avoid overstating growth:** the multi-hop reference says “exponential,” while the displayed cumulative curve looks approximately linear. A steep line does not establish exponential growth; inspect increments and an appropriate fitted model before naming growth complexity.
 - **Do not copy distorted scale breaks or a cramped legend:** the multi-hop reference compresses the large first total and its legend crowds neighboring items. Redesign with full-scale/detail panels and measured text bounds instead of reproducing these defects.
 - **Cross-check panels:** every stacked total equals its last cumulative point; ratio labels use the configured baseline; displayed samples/counts and environments agree everywhere; threshold callouts are computed, not hand-positioned estimates.
-- **Verify geometry in a real browser:** text bounding boxes fit their panel/legend, ticks do not collide, callouts remain outside marks, thin segments retain table access, contrast supports labels. Inspect 390/768/1280px and print/export separately; DOM overflow alone cannot detect SVG text overlaps.
+- **Verify geometry in a real browser:** text bounding boxes fit their panel/legend, ticks do not collide, callouts remain outside marks, thin segments retain table access, contrast supports labels. Inspect 390/768/1280px and print/export separately; DOM overflow alone cannot detect text overlaps.
 - **Preserve uncertainty:** no raw source means “design reference only.” Do not report the supplied benchmarks as rerun, statistically verified or accepted project evidence.

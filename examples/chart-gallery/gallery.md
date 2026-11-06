@@ -4,7 +4,7 @@ Synthetic chart fixtures. No benchmark, confidence claim or real project schedul
 
 ## Bar
 
-![Bar](charts/bar.svg)
+[View Bar](charts/bar.html)
 
 Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -20,7 +20,7 @@ Source: [gallery-data.json](gallery-data.json) · `/categories`
 
 ## Line
 
-![Line](charts/line.svg)
+[View Line](charts/line.html)
 
 Connected observations show change over ordered numeric or date values; gaps must be explicit in the source.
 
@@ -38,7 +38,7 @@ Source: [gallery-data.json](gallery-data.json) · `/ordered`
 
 ## Scatter
 
-![Scatter](charts/scatter.svg)
+[View Scatter](charts/scatter.html)
 
 Point positions show association between two numeric measures; association does not establish causation.
 
@@ -56,7 +56,7 @@ Source: [gallery-data.json](gallery-data.json) · `/ordered`
 
 ## Stacked Bar
 
-![Stacked Bar](charts/stacked-bar.svg)
+[View Stacked Bar](charts/stacked-bar.html)
 
 Segments show absolute contributions to a total; middle segments are harder to compare across groups.
 
@@ -71,7 +71,7 @@ Source: [gallery-data.json](gallery-data.json) · `/parts`
 
 ## Heatmap
 
-![Heatmap](charts/heatmap.svg)
+[View Heatmap](charts/heatmap.html)
 
 Cell color reveals patterns across two categories; use the values and table for exact comparisons.
 
@@ -90,7 +90,7 @@ Source: [gallery-data.json](gallery-data.json) · `/matrix`
 
 ## Grouped Bar
 
-![Grouped Bar](charts/grouped-bar.svg)
+[View Grouped Bar](charts/grouped-bar.html)
 
 Side-by-side bars compare named series within categories on a common zero baseline and unit.
 
@@ -105,7 +105,7 @@ Source: [gallery-data.json](gallery-data.json) · `/parts`
 
 ## Multi Line
 
-![Multi Line](charts/multi-line.svg)
+[View Multi Line](charts/multi-line.html)
 
 Separate lines compare series across the same ordered x values and unit; missing values are not interpolated.
 
@@ -123,7 +123,7 @@ Source: [gallery-data.json](gallery-data.json) · `/ordered`
 
 ## Area
 
-![Area](charts/area.svg)
+[View Area](charts/area.html)
 
 A zero-baseline filled area shows the magnitude of a nonnegative measure over ordered observations.
 
@@ -141,7 +141,7 @@ Source: [gallery-data.json](gallery-data.json) · `/ordered`
 
 ## Histogram
 
-![Histogram](charts/histogram.svg)
+[View Histogram](charts/histogram.html)
 
 Explicit bins show the distribution of raw observations; bin choice affects the apparent shape.
 
@@ -166,7 +166,7 @@ Source: [gallery-data.json](gallery-data.json) · `/samples`
 
 ## Box
 
-![Box](charts/box.svg)
+[View Box](charts/box.html)
 
 Boxes summarize raw sample distributions using linear-interpolated quartiles and Tukey 1.5-IQR whiskers; dots show outliers, not confidence intervals.
 
@@ -191,7 +191,7 @@ Source: [gallery-data.json](gallery-data.json) · `/samples`
 
 ## Ecdf
 
-![Ecdf](charts/ecdf.svg)
+[View Ecdf](charts/ecdf.html)
 
 The empirical cumulative distribution shows the observed fraction at or below each value without selecting histogram bins.
 
@@ -216,7 +216,7 @@ Source: [gallery-data.json](gallery-data.json) · `/samples`
 
 ## Range
 
-![Range](charts/range.svg)
+[View Range](charts/range.html)
 
 Supplied interval endpoints and optional estimates expose uncertainty or spread; their statistical meaning must be stated in the limits.
 
@@ -231,7 +231,7 @@ Source: [gallery-data.json](gallery-data.json) · `/intervals`
 
 ## Dumbbell
 
-![Dumbbell](charts/dumbbell.svg)
+[View Dumbbell](charts/dumbbell.html)
 
 Linked points preserve the before/after pairing within each category without implying a time series.
 
@@ -246,7 +246,7 @@ Source: [gallery-data.json](gallery-data.json) · `/intervals`
 
 ## Waterfall
 
-![Waterfall](charts/waterfall.svg)
+[View Waterfall](charts/waterfall.html)
 
 Signed contributions explain how a starting total changes; contributions must reconcile with any supplied final total.
 
@@ -262,7 +262,7 @@ Source: [gallery-data.json](gallery-data.json) · `/contributions`
 
 ## Timeline
 
-![Timeline](charts/timeline.svg)
+[View Timeline](charts/timeline.html)
 
 Intervals show supplied start/end positions or dates, including overlap; task counts never determine duration.
 
@@ -277,7 +277,7 @@ Source: [gallery-data.json](gallery-data.json) · `/schedule`
 
 ## Pareto
 
-![Pareto](charts/pareto.svg)
+[View Pareto](charts/pareto.html)
 
 Descending nonnegative contributions and an explicitly labelled cumulative-share line show concentration; the two scales are kept distinct.
 

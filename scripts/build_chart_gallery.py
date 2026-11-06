@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 import presentation_charts as charts
+import html_shapes
 from test_reporting import chart_figure,page
 
 
@@ -35,9 +36,9 @@ def main():
     body='<h1>16 native chart families</h1><p class="note">'+data['disclaimer']+'</p><p>Choose a chart by the question and available evidence. Every figure has an exact source-value table.</p><nav>'+ ' · '.join(f'<a href="#{s["id"]}">{s["title"]}</a>' for s in specs)+'</nav>'
     md=['# Native chart gallery',data['disclaimer']]
     for spec in specs:
-        chart=charts.render(root,spec);destination=root/'charts'/(chart['id']+'.svg');destination.parent.mkdir(exist_ok=True);destination.write_text(chart['svg'])
+        chart=charts.render(root,spec);destination=root/'charts'/(chart['id']+'.html');destination.parent.mkdir(exist_ok=True);destination.write_text(html_shapes.document(chart['title'],chart['html']))
         body+='<section id="'+chart['id']+'">'+chart_figure(chart,'gallery-data.json')+'</section>'
-        md.extend(['## '+chart['title'],f'![{chart["title"]}](charts/{chart["id"]}.svg)',chart['why'],'Limits: '+chart['limits'],f'Source: [gallery-data.json](gallery-data.json) · `{chart["source"]["pointer"]}`'])
+        md.extend(['## '+chart['title'],f'[View {chart["title"]}](charts/{chart["id"]}.html)',chart['why'],'Limits: '+chart['limits'],f'Source: [gallery-data.json](gallery-data.json) · `{chart["source"]["pointer"]}`'])
         table=['| '+' | '.join(chart['fields'])+' |','| '+' | '.join('---' for _ in chart['fields'])+' |']
         table.extend('| '+' | '.join(str(v).replace('|','\\|') for v in row)+' |' for row in chart['rows']);md.append('\n'.join(table))
     (root/'gallery.html').write_text(page('Native chart gallery',body));(root/'gallery.md').write_text('\n\n'.join(md)+'\n')

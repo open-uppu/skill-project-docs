@@ -6,7 +6,7 @@
 <!-- AUTO:phase-flow -->
 ## Phase route
 
-![Phase route](phase-flow.svg)
+[Phase route](phase-flow.html)
 
 Verified tasks: **2/5**. Counts describe verified tasks, not effort or elapsed time.
 
@@ -24,7 +24,7 @@ Verified tasks: **2/5**. Counts describe verified tasks, not effort or elapsed t
 
 How do the example methods compare?
 
-![Compare categories on a common baseline](charts/compare-methods.svg)
+[View Compare categories on a common baseline](charts/compare-methods.html)
 
 **Why this chart:** Aligned bars make category magnitudes easy to compare; the value axis includes zero.
 
@@ -53,7 +53,7 @@ How do the example methods compare?
 
 How does the example value change across ordered runs?
 
-![Use a line only when x has an order](charts/show-trend.svg)
+[View Use a line only when x has an order](charts/show-trend.html)
 
 **Why this chart:** Connected observations show change over ordered numeric or date values; gaps must be explicit in the source.
 
@@ -83,7 +83,7 @@ How does the example value change across ordered runs?
 
 How does the same scenario compare before and after?
 
-![Keep each before/after pair together](charts/paired-latency.svg)
+[View Keep each before/after pair together](charts/paired-latency.html)
 
 **Why this chart:** A paired-dot chart preserves the before/after relationship for each scenario without implying a time series.
 

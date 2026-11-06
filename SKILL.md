@@ -11,6 +11,10 @@ New project? Run `scripts/init_project.py` from this skill’s actual installati
 
 **Language:** write doc content in the language set in `.project-docs/config.json` (`language`), matching the existing pages. Keep file names, code identifiers and the project's established terms as they are. Reply to the user in the language they used.
 
+## SVG is prohibited
+
+Never generate, embed, link, export, or send SVG in project-docs outputs, including inline SVG, SVG files, data URLs, SVG icons, and renderers such as Mermaid that produce SVG. Use semantic HTML and CSS for reader-facing visuals, including reports and Azure DevOps attachments. Preserve existing historical project assets until the owner decides on their migration; flag SVG use and replace it in active outputs. The documentation gate checks reader-facing HTML and Markdown.
+
 ## Working principles (read first)
 
 1. **Pictures and tables over prose.** One column per alternative; `.excalidraw` flowcharts with peers on one level, no crossing lines, light colours. The project's own conventions (order, labels) are in `.project-docs/rules.md`.
@@ -40,6 +44,7 @@ New project? Run `scripts/init_project.py` from this skill’s actual installati
 | the memory bank (start of every task, hand-off) | `integrations/memory-bank.md` (the `memory-bank` skill owns the files) |
 | a reader-facing page: its role, split, audit | `integrations/diataxis.md` (the `diataxis` skill owns the framework) |
 | Tracker connections, stable Task UIDs, mappings, snapshots or drift | `integrations/providers.md`, then only the configured provider's guide |
+| Explicitly attaching a standalone HTML report to an Azure DevOps work item | `integrations/azure-devops.md` §Attach an HTML report; dry-run, then write only to the specified authorized destination |
 | Legacy Azure DevOps ids or work-item text | `integrations/azure-devops.md`, then `.project-docs/azure-devops.md` |
 | GitHub Actions test evidence | `integrations/github-actions.md` |
 | Explicitly requested copying of work items between trackers | `integrations/migration.md`; this is separate from ordinary docs sync |
@@ -59,7 +64,7 @@ Read `.project-docs/config.json` to select the primary tracker and secondary evi
 
 `tasks.md` owns status. Stable `**Task UID:**` metadata and `.project-docs/work-items.json` own external mappings. Preserve UIDs across task moves and provider changes; use the explicit `integrations.py upgrade` command for legacy ADO projects. Closed Issues and merged PRs alone are not acceptance evidence. Unknown statuses, stale snapshots and partial coverage must be reported. Normal commands never auto-close Tasks.
 
-Only an explicitly requested migration may create destination items/comments/files. Follow `integrations/migration.md`: plan the concrete copy, preserve source originals, apply/resume with operation markers, verify readback, then cut over. Never write to the source or automatically delete destination items during rollback. Existing authorization for the specified copy persists; do not repeatedly ask for it. If the endpoint, scope or accepted limitations change, update the concrete plan before writing.
+Only explicitly requested migrations or specifically authorized report uploads may create destination items/comments/files. Follow `integrations/migration.md`: plan the concrete copy, preserve source originals, apply/resume with operation markers, verify readback, then cut over. Never write to the source or automatically delete destination items during rollback. Existing authorization for the specified copy persists; do not repeatedly ask for it. If the endpoint, scope or accepted limitations change, update the concrete plan before writing.
 
 ## Understandable Task descriptions
 

@@ -215,9 +215,9 @@ For other agents, write `project-docs rework audit` or `project-docs rework appl
 
 Every phase can show its steps and current progress in both `tasks.md` and `presentation.html`. Status is derived from Task headers: all active and blocked steps remain visible, and verified task counts are not presented as estimates of effort or time. Optional grouping lives in `.project-docs/presentations/phase-N.json`; no status is duplicated there.
 
-The HTML template adds reading/presentation modes, a slide index/counter, keyboard navigation, full screen, print/PDF styles and inspectable source-value tables. Charts are inline SVG and work offline. Selection follows the reader's question: bars compare categories, lines show ordered change, scatter plots show relationships, stacked bars show contributions, and heatmaps show categorical patterns. Every chart explains why it was chosen and names its source, units and limitations.
+The HTML template adds reading/presentation modes, a slide index/counter, keyboard navigation, full screen, print/PDF styles and inspectable source-value tables. Charts are inline HTML/CSS and work offline. Selection follows the reader's question: bars compare categories, lines show ordered change, scatter plots show relationships, stacked bars show contributions, and heatmaps show categorical patterns. Every chart explains why it was chosen and names its source, units and limitations.
 
-Custom charts use a project-owned SVG generator with source/generator checksums. The example includes a paired-dot chart, which keeps each scenario's before/after values together. Native renderers also cover distributions, uncertainty intervals, waterfalls and schedules. Use a justified custom generator for coordinated multi-panel compositions or encodings beyond the native contracts.
+Custom charts use a project-owned HTML generator with source/generator checksums. The example includes a paired-dot chart, which keeps each scenario's before/after values together. Native renderers also cover distributions, uncertainty intervals, waterfalls and schedules. Use a justified custom generator for coordinated multi-panel compositions or encodings beyond the native contracts.
 
 ```bash
 python3 /path/to/skill/scripts/sync_presentation.py 1
@@ -322,11 +322,15 @@ python3 /path/to/skill/scripts/run_tests.py --root . --output project/results/te
 
 For complex dashboards using multi-hop and Local/Workbench comparison patterns, use [advanced chart recipes](rules/advanced-chart-recipes.md): coordinated panels, step costs, cumulative curves, baseline ratios, environment comparisons and honest scaling. The design lessons are retained in the guide; the original SVG references were removed after review, and their benchmark JSON is not included.
 
-There are **16 native chart families plus custom SVG charts**: comparison, series, trends, composition, relationships, matrices, distributions, intervals, paired changes, contributions and schedules. See the [interactive offline gallery](examples/chart-gallery/gallery.html), [Markdown gallery](examples/chart-gallery/gallery.md) and [selection rules](rules/presentation-charts.md). Reports select charts from actual available evidence; missing coverage/history stays explicit.
+There are **16 native chart families plus custom HTML charts**: comparison, series, trends, composition, relationships, matrices, distributions, intervals, paired changes, contributions and schedules. See the [interactive offline gallery](examples/chart-gallery/gallery.html), [Markdown gallery](examples/chart-gallery/gallery.md) and [selection rules](rules/presentation-charts.md). Reports select charts from actual available evidence; missing coverage/history stays explicit.
 
 Examples: [intentional failure report](examples/test-report-fixture/verified/report.html) · [failure report Markdown](examples/test-report-fixture/verified/report.md) · [actual offline repository test report](examples/phase-presentation/project/results/tests/layout-verified/report.html).
 
 HTML supports readable scrolling charts, vertical mobile workflows, responsive summaries, case search with pagination, source tables, print and visible error states. Test failures retain reports and their original nonzero exit code. Plain unittest commands outside this wrapper do not automatically create reports. Sample failure reports are intentionally failing fixtures, not production defects; integration tests use mocks, not live-service verification.
+
+### Azure DevOps HTML reports
+
+Test runs include `report-ado.html`, a self-contained static report with source results embedded. It can be attached to an explicitly selected Azure DevOps work item after a dry-run; see [Azure DevOps report attachment](integrations/azure-devops.md#attach-an-html-report-to-a-work-item). HTML attachments are downloaded for viewing in Azure DevOps. Ordinary documentation updates do not upload reports.
 
 ## Tests
 
@@ -348,4 +352,4 @@ The tests write only to temporary folders. To run the complete offline repositor
 Not chosen yet.
 # skill-project-docs
 
-Editable diagram location checks are enabled by default: `/project-docs-check` reports an ERROR without moving files; `/project-docs-rework` moves misplaced originals and repairs references. Rework uses `scripts/diagram_locations.py --root <project> --plan --json`, then `--apply --json`, with intact backups outside the repository. It must review generator paths, rerun applicable generators/checks and repeat the location check; merely registering the old path in owner-map is insufficient. SVG/PNG previews may remain with their reader pages. Update the installed skill before expecting this new behavior.
+Editable diagram location checks are enabled by default: `/project-docs-check` reports an ERROR without moving files; `/project-docs-rework` moves misplaced originals and repairs references. Rework uses `scripts/diagram_locations.py --root <project> --plan --json`, then `--apply --json`, with intact backups outside the repository. It must review generator paths, rerun applicable generators/checks and repeat the location check; merely registering the old path in owner-map is insufficient. PNG previews may remain with their reader pages. Update the installed skill before expecting this new behavior.

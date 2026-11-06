@@ -8,6 +8,18 @@ Azure DevOps is where the project lead reviews work; each phase's `tasks.md` sta
 
 Project-specific facts live in the project, not here: organization, project and Feature id are in `.project-docs/config.json` → `ado`; the backlog tree, examples and any rules about writing Descriptions are in `.project-docs/azure-devops.md` (read it first). No PAT is needed to read the backlog: use the MCP server or `az`.
 
+## Attach an HTML report to a work item
+
+For an explicitly requested report upload, use an existing `azure-devops` connection in `.project-docs/config.json` with `organization`, `project`, and `token_env`; the PAT needs work-item read/write scope and project permission. Specify an existing work-item ID. Generated test runs include a self-contained `report-ado.html` with the raw results included; no SVG, external files or JavaScript are required. Other report files must also be static, self-contained UTF-8 HTML.
+
+```bash
+python3 /path/to/project-docs/scripts/ado_html_report.py --root . --connection team-ado --work-item 123 --report project/results/tests/RUN/report-ado.html
+# After inspecting the dry-run and receiving authorization for this destination:
+python3 /path/to/project-docs/scripts/ado_html_report.py --root . --connection team-ado --work-item 123 --report project/results/tests/RUN/report-ado.html --apply
+```
+
+Dry-run performs local validation only. `--apply` uploads an attachment, guards the work-item revision against concurrent edits, then verifies the attachment and checksum by reading back. Identical attachments are not added twice. If upload succeeds but linking fails, ADO may retain an unattached upload; report the failure and investigate before retrying. ADO HTML attachments are downloaded for viewing, not guaranteed to render inline in the work-item page. Normal documentation sync never uploads anything.
+
 ## Writing and explicitly updating Descriptions
 
 Read the target project’s AGENTS.md and `.project-docs/azure-devops.md` before drafting; follow `rules/task-descriptions.md` for Wh-Questions, planned versus observed outcomes, bilingual consistency and preserved evidence. Keep the approved headings rather than adding competing summary sections. An explicit request to edit specified Descriptions authorizes that field scope; it is separate from normal read-only sync and from migration. Read live fields/revisions, prepare exact changes, protect concurrent edits, read back and verify rendering where possible. Missing live access/rules/evidence leaves a labelled draft, not a claimed ADO update.

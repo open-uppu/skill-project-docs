@@ -1,8 +1,10 @@
 """Build MD/HTML test evidence, charts, and observed failure workflows from JSON."""
 import hashlib
 import html
+import html_shapes
 import json
 import math
+import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -126,18 +128,7 @@ def stage_label(case,stage):
 
 
 def workflow(case,uid):
-    states=workflow_states(case)
-    width=960;height=170;parts=[f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" role="img" aria-labelledby="{uid}" font-family="system-ui,sans-serif"><title id="{uid}">{escape(case["id"])} — observed lifecycle</title><rect width="960" height="170" fill="#f2f6f7"/>']
-    gap=930/len(states)
-    for i,(stage,state,duration) in enumerate(states):
-        px=15+i*gap;color='#b04e54' if state in BAD or state=='failed' else '#17665c' if state=='passed' else '#63757b'
-        parts.append(f'<rect x="{px}" y="22" width="{gap-16}" height="112" rx="8" fill="white" stroke="{color}"/>')
-        label=stage_label(case,stage)
-        for y,value,size in ((48,label,17),(78,state,14),(110,f'{duration:.4g} s' if duration is not None else 'Timing unknown',12)):
-            parts.append(f'<text x="{px+12}" y="{y}" fill="{color}" font-size="{size}">{escape(value)}</text>')
-        if i<len(states)-1:parts.append(f'<text x="{px+gap-13}" y="84" font-size="16" fill="#63757b">→</text>')
-    parts.append('<text x="20" y="156" font-size="12" fill="#536876">Observed stage or explicitly unknown. A failure location is not a root-cause diagnosis.</text></svg>')
-    return ''.join(parts)
+    return page('Observed test lifecycle', '<h1>'+escape(case['id'])+'</h1>'+workflow_html(case,uid))
 
 
 def workflow_html(case,uid):
@@ -146,7 +137,7 @@ def workflow_html(case,uid):
         css='bad' if state in BAD else 'passed' if state=='passed' else ''
         timing=f'{duration:.4g} s' if duration is not None else 'Timing unknown'
         cards.append(f'<li class="{css}"><strong>{escape(stage_label(case,stage))}</strong><span>{escape(state.capitalize())}</span><small>{timing}</small></li>')
-    return '<div class="workflow"><div class="workflow-visual">'+workflow(case,uid)+'</div><ol class="workflow-list" role="list">'+''.join(cards)+'</ol></div>'
+    return '<div class="workflow"><ol class="workflow-list" role="list">'+''.join(cards)+'</ol><p>Observed stage or explicitly unknown. A failure location is not a root-cause diagnosis.</p></div>'
 
 
 def workflow_markdown(case):
@@ -160,13 +151,14 @@ def chart_figure(chart,source='results.json'):
     head=''.join('<th>'+escape(f)+'</th>' for f in chart['fields'])
     rows=''.join('<tr>'+''.join('<td>'+escape(v)+'</td>' for v in row)+'</tr>' for row in chart['rows'][:100])
     preview=f'<p>Showing the first 100 of {len(chart["rows"])} rows. Full observations remain in the linked JSON source.</p>' if len(chart['rows'])>100 else ''
-    return f'<figure class="evidence-chart"><h3>{escape(chart["title"])}</h3>{charts.html_visual(chart["svg"])}<figcaption><p><strong>Why:</strong> {escape(chart["why"])}</p><p><strong>Limits:</strong> {escape(chart["limits"])}</p><p class="source-note">Source: <a href="{escape(source)}">{escape(source)}</a> · {escape(chart["source"].get("pointer",""))} · SHA-256 {chart["sha256"]}</p></figcaption>{preview}<details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div></details></figure>'
+    asset_hash=hashlib.sha256(html_shapes.document(chart['title'],chart['html']).encode('utf-8')).hexdigest()
+    return f'<figure class="evidence-chart" data-asset-sha256="{asset_hash}"><h3>{escape(chart["title"])}</h3>{charts.html_visual(chart["html"])}<figcaption><p><strong>Why:</strong> {escape(chart["why"])}</p><p><strong>Limits:</strong> {escape(chart["limits"])}</p><p class="source-note">Source: <a href="{escape(source)}">{escape(source)}</a> · {escape(chart["source"].get("pointer",""))} · SHA-256 {chart["sha256"]}</p></figcaption>{preview}<details><summary>Inspect source values</summary><div class="tbl"><table><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div></details></figure>'
 
 
 def page(title,body):
     css=(Path(__file__).resolve().parent.parent/'templates/presentation-visuals.css').read_text()
     return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+escape(title)+'</title><style>'+css+'''
-    *{box-sizing:border-box}html{scroll-padding-top:var(--report-offset,90px)}body{margin:0;background:#eaf0f4;color:#172d3f;font:16px/1.6 system-ui,sans-serif}main{max-width:1120px;margin:24px auto;padding:28px;background:white;border-radius:12px}h1{font-size:clamp(28px,4vw,46px);line-height:1.15}h2{margin-top:44px}h3,summary{overflow-wrap:anywhere}a{color:#17665c}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:10px;text-align:left;border-bottom:1px solid #d0dde3;vertical-align:top}.tbl{overflow-x:auto}.badge{padding:4px 10px;border-radius:5px;background:#e5f1ed}.bad{background:#fbebeb;color:#963e44}.note{background:#f2f6f7;padding:16px;border-left:4px solid #63757b}.source-note{overflow-wrap:anywhere}.case-pager{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:14px 0}.case-pager button{font:inherit;padding:8px 12px;border:1px solid #a8b9c0;border-radius:6px;background:white;color:#17665c}.case-pager button:disabled{opacity:.5}.case{padding:16px;border:1px solid #d0dde3;margin:12px 0;border-radius:8px}input{font:inherit;padding:10px;width:100%;border:1px solid #a8b9c0;border-radius:6px}.workflow{overflow-x:auto}.workflow svg{display:block;width:100%;min-width:650px}button,summary{cursor:pointer}.report-nav{position:sticky;top:0;padding:12px 0;background:white;z-index:5;border-bottom:1px solid #d0dde3;display:flex;gap:14px;flex-wrap:wrap;font-size:13px}a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #345f9a;outline-offset:3px}@media(max-width:600px){main{margin:0;padding:18px;border-radius:0}.dimension-table thead{display:none}.dimension-table tr{display:grid;gap:5px;padding:14px 0;border-bottom:1px solid #d0dde3}.dimension-table td{border:0;padding:3px 0}.dimension-table td:first-child{font-weight:600}.dimension-table td:nth-child(2){color:#17665c}}@media print{input,.report-nav,.case-pager{display:none}.case[hidden]{display:block!important}details{display:block}.case,figure{break-inside:avoid}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+    *{box-sizing:border-box}html{scroll-padding-top:var(--report-offset,90px)}body{margin:0;background:#eaf0f4;color:#172d3f;font:16px/1.6 system-ui,sans-serif}main{max-width:1120px;margin:24px auto;padding:28px;background:white;border-radius:12px}h1{font-size:clamp(28px,4vw,46px);line-height:1.15}h2{margin-top:44px}h3,summary{overflow-wrap:anywhere}a{color:#17665c}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:10px;text-align:left;border-bottom:1px solid #d0dde3;vertical-align:top}.tbl{overflow-x:auto}.badge{padding:4px 10px;border-radius:5px;background:#e5f1ed}.bad{background:#fbebeb;color:#963e44}.note{background:#f2f6f7;padding:16px;border-left:4px solid #63757b}.source-note{overflow-wrap:anywhere}.case-pager{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:14px 0}.case-pager button{font:inherit;padding:8px 12px;border:1px solid #a8b9c0;border-radius:6px;background:white;color:#17665c}.case-pager button:disabled{opacity:.5}.case{padding:16px;border:1px solid #d0dde3;margin:12px 0;border-radius:8px}input{font:inherit;padding:10px;width:100%;border:1px solid #a8b9c0;border-radius:6px}.workflow{overflow-x:auto}button,summary{cursor:pointer}.report-nav{position:sticky;top:0;padding:12px 0;background:white;z-index:5;border-bottom:1px solid #d0dde3;display:flex;gap:14px;flex-wrap:wrap;font-size:13px}a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #345f9a;outline-offset:3px}@media(max-width:600px){main{margin:0;padding:18px;border-radius:0}.dimension-table thead{display:none}.dimension-table tr{display:grid;gap:5px;padding:14px 0;border-bottom:1px solid #d0dde3}.dimension-table td{border:0;padding:3px 0}.dimension-table td:first-child{font-weight:600}.dimension-table td:nth-child(2){color:#17665c}}@media print{input,.report-nav,.case-pager{display:none}.case[hidden]{display:block!important}details{display:block}.case,figure{break-inside:avoid}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
     </style></head><body><main>'''+body+'''</main><script>let printDetails=[];addEventListener('beforeprint',()=>{printDetails=[...document.querySelectorAll('details')].map(el=>[el,el.open]);printDetails.forEach(([el])=>el.open=true)});addEventListener('afterprint',()=>{printDetails.forEach(([el,open])=>el.open=open);printDetails=[]});document.querySelectorAll('[data-filter]').forEach(input=>{const rows=[...document.querySelectorAll(input.dataset.filter)];const texts=rows.map(row=>row.textContent.toLowerCase());if(!rows.length){input.disabled=true;input.placeholder='No case-level records available';return}let page=0;const pager=document.createElement('div');pager.className='case-pager';const prev=document.createElement('button'),next=document.createElement('button'),status=document.createElement('span');prev.type=next.type='button';prev.textContent='Previous cases';next.textContent='Next cases';status.setAttribute('aria-live','polite');pager.append(prev,status,next);input.closest('label').after(pager);function render(){const q=input.value.toLowerCase();const matches=rows.filter((row,i)=>texts[i].includes(q));const pages=Math.max(1,Math.ceil(matches.length/50));page=Math.min(page,pages-1);const visible=new Set(matches.slice(page*50,(page+1)*50));rows.forEach(row=>{const hidden=!visible.has(row);if(row.hidden!==hidden)row.hidden=hidden});status.textContent=`${matches.length ? page*50+1 : 0}–${Math.min((page+1)*50,matches.length)} of ${matches.length} matches (${rows.length} records total)`;prev.disabled=page===0;next.disabled=page===pages-1}prev.onclick=()=>{page--;render()};next.onclick=()=>{page++;render()};input.addEventListener('input',()=>{page=0;render()});render()});const headings=[...document.querySelectorAll('h2')];if(headings.length>1){const nav=document.createElement('nav');nav.className='report-nav';nav.setAttribute('aria-label','Report sections');headings.forEach((heading,i)=>{heading.id='report-section-'+i;const a=document.createElement('a');a.href='#'+heading.id;a.textContent=heading.textContent;nav.append(a)});document.querySelector('h1').after(nav);const measure=()=>document.documentElement.style.setProperty('--report-offset',`${nav.offsetHeight+16}px`);measure();if('ResizeObserver' in window)new ResizeObserver(measure).observe(nav)}</script></body></html>'''
 
 
@@ -193,8 +185,8 @@ def write_report(directory):
         note='Chart unavailable: '+error['chart']+' — '+error['error']
         md.extend(['## Report rendering issue',note]);body+='<p class="note bad">'+escape(note)+'. Test records remain available below.</p>'
     for chart in rendered:
-        asset='charts/'+chart['id']+'.svg';assets[asset]=chart['svg']
-        md.extend(['## '+chart['title'],f'![{chart["title"]}]({asset})','**Why:** '+chart['why'],'**Limits:** '+chart['limits'],f'Source: [results.json](results.json) · `{chart["source"]["pointer"]}`'])
+        asset='charts/'+chart['id']+'.html';assets[asset]=html_shapes.document(chart['title'],chart['html'])
+        md.extend(['## '+chart['title'],f'[View {chart["title"]}]({asset})','**Why:** '+chart['why'],'**Limits:** '+chart['limits'],f'Source: [results.json](results.json) · `{chart["source"]["pointer"]}`'])
         if len(chart['rows'])>100:md.append(f'Source table preview: first 100 of {len(chart["rows"])} rows; full values remain in results.json.')
         table=['| '+' | '.join(chart['fields'])+' |','| '+' | '.join('---' for _ in chart['fields'])+' |']
         table.extend('| '+' | '.join(str(v).replace('|','\\|').replace('\n',' ') for v in row)+' |' for row in chart['rows'][:100]);md.append('\n'.join(table))
@@ -203,8 +195,8 @@ def write_report(directory):
     body+='<h2>Failure workflows</h2><p>First 20 failed-record workflows; the inventory below retains every record and traceback.</p>'
     md.extend(['## Failure workflows','First 20 failed-record workflows; all records and tracebacks remain below.'])
     for i,c in enumerate(failed[:20]):
-        uid='failure-'+str(i)+'-'+hashlib.sha256(c['id'].encode()).hexdigest()[:8];svg=workflow(c,uid);asset='workflows/'+uid+'.svg';assets[asset]=svg
-        md.extend(['### '+c['id'],f'![Observed failure lifecycle]({asset})',workflow_markdown(c)]);body+='<h3>'+escape(c['id'])+'</h3>'+workflow_html(c,uid)
+        uid='failure-'+str(i)+'-'+hashlib.sha256(c['id'].encode()).hexdigest()[:8];asset='workflows/'+uid+'.html';assets[asset]=workflow(c,uid)
+        md.extend(['### '+c['id'],f'[Observed failure lifecycle]({asset})',workflow_markdown(c)]);body+='<h3>'+escape(c['id'])+'</h3>'+workflow_html(c,uid)
     if not failed:md.append('No failed record was observed.');body+='<p>No failed record was observed.</p>'
     md.append('## Full inventory and tracebacks');body+='<h2>Full inventory and tracebacks</h2><label>Filter test names, outcomes or errors<input data-filter=".case" placeholder="Filter results"></label>'
     for c in result['cases']:
@@ -218,5 +210,14 @@ def write_report(directory):
     md.extend(['## Limits',*result['limitations']]);body+='<h2>Limits</h2><ul>'+''.join('<li>'+escape(v)+'</li>' for v in result['limitations'])+'</ul>'
     for log in result.get('logs',[]):md.append(f'[Raw log]({log})');body+='<p><a href="'+escape(log)+'">Raw log: '+escape(log)+'</a></p>'
     for name,value in assets.items():p=directory/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(value,encoding='utf-8')
-    (directory/'report.md').write_text('\n\n'.join(md)+'\n',encoding='utf-8');(directory/'report.html').write_text(page('Test run report',body),encoding='utf-8')
+    (directory/'report.md').write_text('\n\n'.join(md)+'\n',encoding='utf-8')
+    report=page('Test run report',body)
+    (directory/'report.html').write_text(report,encoding='utf-8')
+    static=re.sub(r'<script>.*?</script>', '', report, flags=re.I|re.S)
+    static=static.replace('<label>Filter test names, outcomes or errors<input data-filter=".case" placeholder="Filter results"></label>', '')
+    raw='<details><summary>Raw source results.json</summary><pre>'+escape(source.read_text(encoding='utf-8'))+'</pre></details>'
+    static=static.replace('</main>',raw+'</main>',1)
+    from ado_html_report import validate_html
+    validate_html(static.encode('utf-8'))
+    (directory/'report-ado.html').write_text(static,encoding='utf-8')
     return {'assets':assets,'errors':render_errors}

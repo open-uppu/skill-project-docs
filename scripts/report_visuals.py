@@ -48,7 +48,7 @@ class ImagesById(HTMLParser):
         active=[scope for _,scope in self.frames if scope is not None]+([own] if own else [])
         for scope in active:
             if tag=='img' and attrs.get('src'):scope['images'].append(attrs['src'])
-            if tag=='svg':scope['inline'].append(attrs.get('data-asset-sha256'))
+            if attrs.get('data-asset-sha256'):scope['inline'].append(attrs['data-asset-sha256'])
         if tag not in self.VOID:self.frames.append((tag,own))
     def handle_endtag(self,tag):
         for index in range(len(self.frames)-1,-1,-1):
@@ -154,17 +154,20 @@ def inspect(root,required=False,reports=None):
                 asset,checksum=fingerprint(visual,'asset','sha256',where)
                 fingerprint(visual,'generator','generator_sha256',where)
                 if asset is None:continue
-                if asset.suffix.lower() not in ('.svg','.png','.jpg','.jpeg','.webp','.gif'):
-                    add('unsupported-visual-asset',where,'Use a renderable image asset or a separately checksummed inline SVG.');continue
-                images=re.findall(r'!\[[^\]]*\]\(\s*(?:<([^>]+)>|([^\s)]+))',body)
-                images.extend((src,'') for src in ImagesById(body).images)
+                if asset.suffix.lower() not in ('.html','.htm'):
+                    add('unsupported-visual-asset',where,'Use a standalone HTML visual asset.');continue
+                try:
+                    from ado_html_report import validate_html
+                    validate_html(asset.read_bytes())
+                except (OSError,ValueError) as error:
+                    add('invalid-html-visual',where,str(error));continue
+                images=re.findall(r'(?<!!)\[[^\]]*\]\(\s*(?:<([^>]+)>|([^\s)]+))',body)
                 md_paths=[]
                 for a,b in images:
                     url=urlsplit(a or b)
                     if not url.scheme and not url.netloc:md_paths.append((local(name).parent/unquote(url.path)).resolve())
-                inline=re.search(r'<svg\b[^>]*data-asset-sha256=[\"\']'+checksum,body)
-                if asset not in md_paths and not inline:add('missing-markdown-visual',where,'Registered image is not embedded in this Markdown section.')
-                if not embeds(entry.get('html'),record.get('html_id'),asset,checksum):add('missing-html-visual',where,'Registered image is absent from the paired HTML section/container.')
+                if asset not in md_paths:add('missing-markdown-visual',where,'Registered HTML visual is not linked in this Markdown section.')
+                if not embeds(entry.get('html'),record.get('html_id'),asset,checksum):add('missing-html-visual',where,'Registered visual is absent from the paired HTML section/container.')
                 for placement in placements:
                     if not isinstance(placement,dict) or not embeds(placement.get('path'),placement.get('html_id'),asset,checksum):add('missing-presentation-visual',where,'Registered image is absent from an affected presentation placement.')
             coverage.append({'report':name,'heading':heading,'status':'failed' if len(findings)>before else 'covered'})

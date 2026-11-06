@@ -37,7 +37,10 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(failed['failures'][0]['stage'],'test')
         self.assertTrue(any(f['file'].endswith('test_fixture.py') for f in failed['failures'][0]['frames']))
         self.assertTrue((self.root/'run/report.html').is_file());self.assertTrue((self.root/'run/report.md').is_file())
-        self.assertTrue(list((self.root/'run/workflows').glob('*.svg')))
+        self.assertTrue(list((self.root/'run/workflows').glob('*.html')))
+        ado=(self.root/'run/report-ado.html').read_text()
+        self.assertNotIn('<svg',ado.lower());self.assertNotIn('<script',ado.lower())
+        self.assertIn('Raw source results.json',ado);self.assertIn('test_bad',ado)
 
     def test_setup_teardown_cleanup_and_body_exception_are_distinguished(self):
         for stage,method in (('setup','setUp'),('teardown','tearDown'),('test','test_body')):
@@ -164,7 +167,7 @@ class Cases(unittest.TestCase):
         _,result=self.run_fixture('import unittest\nclass Cases(unittest.TestCase):\n def test_bad(self):self.fail("bad")\n','run','--phase','1')
         self.assertIn('### [ ] 1.1 Task',(phase/'tasks.md').read_text())
         self.assertIn('Latest test run',(phase/'presentation.html').read_text())
-        self.assertTrue((phase/'test-failure-flow.svg').is_file())
+        self.assertTrue((phase/'test-failure-flow.html').is_file())
 
 
 class ExtendedChartTests(unittest.TestCase):
@@ -203,7 +206,7 @@ class ExtendedChartTests(unittest.TestCase):
             specs=json.loads((root/'chart-specs.json').read_text());self.assertEqual(len(specs),16)
             for spec in specs:
                 with self.subTest(chart=spec['type']):
-                    rendered=charts.render(root,spec);ET.fromstring(rendered['svg']);self.assertTrue(rendered['rows'])
+                    rendered=charts.render(root,spec);self.assertNotIn('<svg',rendered['html'].lower());self.assertTrue(rendered['rows'])
                     self.assertEqual(rendered['sha256'],hashlib.sha256((root/'gallery-data.json').read_bytes()).hexdigest())
 
     def test_extended_encodings_reject_invalid_semantics(self):

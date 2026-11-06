@@ -60,7 +60,7 @@ def main():
                     "paired":[{"scenario":"Small batch","before_ms":90,"after_ms":70},{"scenario":"Medium batch","before_ms":140,"after_ms":95},{"scenario":"Large batch","before_ms":210,"after_ms":160}]}
     results = root/"project/results/measurements.json"; results.write_text(json.dumps(measurements,indent=2)+"\n")
     shutil.copyfile(skill/"templates/paired-chart-example.py", root/"build_paired_chart.py")
-    subprocess.run([sys.executable,str(root/"build_paired_chart.py"),str(results),str(root/"project/results/charts/paired.svg")],check=True)
+    subprocess.run([sys.executable,str(root/"build_paired_chart.py"),str(results),str(root/"project/results/charts/paired.html")],check=True)
     common = {"unit":"ms","limitations":"Synthetic values, one illustrative observation per row; no statistical or production conclusion."}
     spec = {"version":1,"flow":{"steps":[
         {"id":"prepare","label":"Prepare the source","tasks":["demo-owners","demo-connection"]},
@@ -68,7 +68,7 @@ def main():
         {"id":"verify","label":"Verify and hand over","tasks":["demo-verify","demo-handover"]}]},"charts":[
         {**common,"id":"compare-methods","title":"Compare categories on a common baseline","question":"How do the example methods compare?","intent":"comparison","source":{"path":"project/results/measurements.json","pointer":"/comparison"},"x":"method","y":"latency_ms","y_label":"Latency","annotations":["The zero baseline keeps category differences proportionate."]},
         {**common,"id":"show-trend","title":"Use a line only when x has an order","question":"How does the example value change across ordered runs?","intent":"trend","source":{"path":"project/results/measurements.json","pointer":"/trend"},"x":"run","y":"latency_ms","x_label":"Run number","y_label":"Latency"},
-        {**common,"id":"paired-latency","type":"custom","title":"Keep each before/after pair together","question":"How does the same scenario compare before and after?","source":{"path":"project/results/measurements.json","pointer":"/paired"},"fields":["scenario","before_ms","after_ms"],"asset":"project/results/charts/paired.svg","generator":"build_paired_chart.py","reason":"A paired-dot chart preserves the before/after relationship for each scenario without implying a time series."}]}
+        {**common,"id":"paired-latency","type":"custom","title":"Keep each before/after pair together","question":"How does the same scenario compare before and after?","source":{"path":"project/results/measurements.json","pointer":"/paired"},"fields":["scenario","before_ms","after_ms"],"asset":"project/results/charts/paired.html","generator":"build_paired_chart.py","reason":"A paired-dot chart preserves the before/after relationship for each scenario without implying a time series."}]}
     specs = root/".project-docs/presentations"; specs.mkdir(parents=True,exist_ok=True)
     (specs/"phase-1.json").write_text(json.dumps(spec,indent=2)+"\n")
     (root/"project/roadmap.md").write_text('# Example roadmap\n\nSynthetic demonstration only.\n\n| Phase | Progress |\n|---|---|\n| [Phase 1](phases/phase-1/tasks.md) | 2/5 |\n')

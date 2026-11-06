@@ -1,6 +1,7 @@
 """Additional deterministic chart encodings. No plotting/runtime dependency."""
 import math
 from datetime import datetime, timezone
+import html_shapes as shapes
 
 RATIONALE = {
     "grouped-bar": "Side-by-side bars compare named series within categories on a common zero baseline and unit.",
@@ -29,7 +30,8 @@ def quantile(values, p):
 
 
 def render(typ, rows, spec):
-    from presentation_charts import number, fmt, svg_text as text, escape, PALETTE
+    from presentation_charts import number, fmt, PALETTE
+    text = shapes.text
     x, y = spec.get("x"), spec.get("y")
     series = spec.get("series", [])
     field = spec.get("value", y or x)
@@ -50,11 +52,11 @@ def render(typ, rows, spec):
     left,right,top,bottom,height = 210,870,65,355,460
     parts=[]
     def line(x1,y1,x2,y2,stroke="#cbd7db",width=1):
-        parts.append(f'<path d="M{x1:.3f} {y1:.3f}L{x2:.3f} {y2:.3f}" stroke="{stroke}" stroke-width="{width}" fill="none"/>')
+        parts.append(shapes.line(x1,y1,x2,y2,stroke,width))
     def rectangle(px,py,w,h,fill):
-        parts.append(f'<rect x="{px:.3f}" y="{py:.3f}" width="{max(0,w):.3f}" height="{max(0,h):.3f}" fill="{fill}"/>')
+        parts.append(shapes.rect(px,py,w,h,fill))
     def dot(px,py,r=5,fill=None,title=""):
-        parts.append(f'<circle cx="{px:.3f}" cy="{py:.3f}" r="{r}" fill="{fill or color}"><title>{escape(title)}</title></circle>')
+        parts.append(shapes.dot(px,py,r,fill or color,title))
     def domain(values, zero=False):
         lo,hi=min(values),max(values)
         if zero:lo,hi=min(0,lo),max(0,hi)
@@ -106,9 +108,9 @@ def render(typ, rows, spec):
         yaxis(lo,hi,spec.get('y_label',y or 'Value')+(f' ({unit})' if unit else ''));xaxis(min(xs),max(xs),spec.get('x_label',x),date)
         if series:legend()
         for n,values_ in enumerate(values):
-            points=' '.join(f'{sx(a):.3f},{sy(b):.3f}' for a,b in zip(xs,values_));stroke=PALETTE[n] if series else color
-            if typ=='area':parts.append(f'<polygon points="{sx(xs[0])},{sy(0)} {points} {sx(xs[-1])},{sy(0)}" fill="{color}" fill-opacity="0.18"/>')
-            parts.append(f'<polyline points="{points}" stroke="{stroke}" stroke-width="3" fill="none"/>')
+            points=[(sx(a),sy(b)) for a,b in zip(xs,values_)];stroke=PALETTE[n] if series else color
+            if typ=='area':parts.append(shapes.area([(sx(xs[0]),sy(0)),*points,(sx(xs[-1]),sy(0))],color,960,height))
+            parts.append(shapes.polyline(points,stroke))
             for a,b in zip(xs,values_):dot(sx(a),sy(b),3,stroke,fmt(b))
     elif typ in {"histogram","ecdf"}:
         left=85;values=sorted(number(r[field]) for r in rows);lo,hi=domain(values);sx=scale(lo,hi,left,right)
@@ -126,7 +128,7 @@ def render(typ, rows, spec):
             points=[(sx(values[0]),bottom)];old=0
             for i,v in enumerate(values,1):
                 yy=bottom-(bottom-top)*i/len(values);points.extend([(sx(v),bottom-(bottom-top)*old),(sx(v),yy)]);old=i/len(values)
-            parts.append('<polyline points="'+' '.join(f'{a:.3f},{b:.3f}' for a,b in points)+f'" stroke="{color}" stroke-width="3" fill="none"/>')
+            parts.append(shapes.polyline(points,color))
     elif typ=='box':
         groups={}
         for r in rows:groups.setdefault(str(r[x]),[]).append(number(r[y]))
@@ -180,9 +182,8 @@ def render(typ, rows, spec):
         for i,(row,v) in enumerate(zip(ranked,vals)):
             px=left+gap*(i+.5);rectangle(px-gap*.3,sy(v),gap*.6,bottom-sy(v),color);total+=v;share=total/sum(vals)
             points.append((px,bottom-share*(bottom-top)));parts.append(text(px,bottom+25,str(row[x])[:16],11,'middle'))
-        parts.append('<polyline points="'+' '.join(f'{a:.3f},{b:.3f}' for a,b in points)+'" stroke="#b04e54" stroke-width="3" fill="none"/>')
+        parts.append(shapes.polyline(points,'#b04e54'))
         for i in range(5):parts.append(text(right+12,bottom-(bottom-top)*i/4+4,f'{i*25}%',12,fill='#b04e54'))
         parts.append(text(right,25,'Cumulative share (right)',12,'end',fill='#b04e54'))
-    title_id='chart-'+spec['id']+'-title'
-    svg=f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 {height:g}" role="img" aria-labelledby="{title_id}" font-family="system-ui,sans-serif"><title id="{title_id}">{escape(spec["title"])}</title><desc>{escape(spec["question"])}</desc><rect width="960" height="{height:g}" fill="white"/>'+''.join(parts)+'</svg>'
-    return svg,fields,[[r[f] for f in fields] for r in rows]
+    visual=shapes.chart(spec['title'],spec['question'],parts,height)
+    return visual,fields,[[r[f] for f in fields] for r in rows]

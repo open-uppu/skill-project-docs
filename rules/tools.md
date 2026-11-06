@@ -19,9 +19,9 @@ Scripts use the Python standard library except `qa_presentation.py` (Playwright)
 | `init_project.py` | Scaffolds `.project-docs/` (incl. `diagrams/`), `project/` and the four `docs/` folders for a new project; never overwrites; runs the two derived-table syncs |
 | `test_build_diagram.py` | Unit tests for `build_diagram.py` and the gate's diagram check (17 cases). Run from a project folder; writes only to temporary folders |
 | `sync_tasks.py` | Sets task headers (`### [x]`) from their subtask checklists and updates the presentation |
-| `sync_presentation.py` | Syncs cover/status plus paired Markdown/HTML step flow and sourced charts; writes SVG assets; `--all`, read-only `--check`, and `--new` scaffolding |
+| `sync_presentation.py` | Syncs cover/status plus paired Markdown/HTML step flow and sourced charts; writes standalone HTML assets; `--all`, read-only `--check`, and `--new` scaffolding |
 | `phase_visuals.py` | Validates step grouping, derives current states/counts, renders shared flow and chart blocks, and detects stale MD/HTML/assets |
-| `presentation_charts.py` | Chooses 16 native chart families by question; reads JSON source, renders SVG/data tables and validates custom SVG provenance |
+| `presentation_charts.py` | Chooses 16 native chart families by question; reads JSON source, renders HTML/data tables and validates custom HTML provenance |
 | `run_tests.py` | Executes unittest or argv commands, imports JUnit/coverage, writes immutable JSON/MD/HTML and optionally attaches phase evidence |
 | `test_results.py` / `test_reporting.py` | Observed lifecycle records, evidence validation, conditional charts, failure workflows and responsive reports |
 | `chart_families.py` / `build_chart_gallery.py` | Extended native encodings and an explicitly synthetic 16-family gallery |
@@ -30,10 +30,10 @@ Scripts use the Python standard library except `qa_presentation.py` (Playwright)
 | `task_naming.py` | Read-only category/topic/title/source/identity checks against a reviewed topic registry; `--require` rejects missing contracts; integrated into the gate when configured |
 | `test_task_hierarchy.py` | Required hierarchy semantics, missing prefixes/source coverage, exclusions, identity preservation and gate/CLI integration |
 | `test_task_naming.py` | Compact/spaced topic titles, stable Task identity/external references, legacy titles and exclusion/completion separation |
-| `test_phase_visuals.py` | Offline tests for flow grouping, chart semantics, custom SVG freshness/safety, paired sync and legacy narrative preservation |
+| `test_phase_visuals.py` | Offline tests for flow grouping, chart semantics, custom HTML freshness/safety, paired sync and legacy narrative preservation |
 | `sync_project_readme.py` | Fills the phase table of `project/README.md` from each phase's `tasks.md`; `--check` verifies only |
 | `sync_memory_bank.py` | Writes the `AUTO:phase-counts` block in `memory-bank/progress.md`; `--check` verifies only (router type M) |
-| `qa_presentation.py` | Renders at 1280px and 390px; checks overflow, backticks, status-pill count, Mermaid (needs Playwright) |
+| `qa_presentation.py` | Renders at 1280px and 390px; checks overflow, backticks, status-pill count and forbidden SVG (needs Playwright) |
 | `flow_log.py` | Opens/closes tasks, logs the first gate, rework, and the %C&A report |
 | `drift.py` | Lists what the docs are behind on since the last sync (changed owners and code, ADO drift, stale generated files, sync and gate checks) as router items; used by `project-docs-sync` (auto) and `/project-docs-now` (manual) |
 | `ado_drift.py` | `--import` saves the ADO snapshot from MCP output; compares it with the `**ADO:**` ids in `tasks.md`. Read-only, never writes ADO |
@@ -49,3 +49,5 @@ Scripts use the Python standard library except `qa_presentation.py` (Playwright)
 | `docs_lib.py` | Shared `tasks.md` parser (normally no edits needed) |
 
 - `diagram_locations.py --root <project> [--plan|--apply] --json`: default read-only location gate for editable originals; apply relocates scenes and static references with external backups. Review dynamic generators and rerun the location check after generation. `test_diagram_locations.py` covers relocation, hashes, collisions, reference repair, read-only behavior and recovery with local fixtures.
+
+`ado_html_report.py` validates self-contained HTML and can explicitly attach it to an Azure DevOps work item with revision and checksum verification; see `integrations/azure-devops.md`.
